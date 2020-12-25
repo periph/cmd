@@ -5,7 +5,6 @@
 package main
 
 import (
-	"periph.io/x/host/hostreg"
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/gpio/gpioreg"
 	"periph.io/x/conn/i2c"
@@ -14,6 +13,7 @@ import (
 	"periph.io/x/conn/pin/pinreg"
 	"periph.io/x/conn/spi"
 	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/host/hostreg"
 )
 
 // jsonAPI contains the global state/caches for the JSON API.

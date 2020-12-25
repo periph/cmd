@@ -15,10 +15,10 @@ import (
 	"os"
 	"sort"
 
-	"periph.io/x/host/hostreg"
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/pin"
 	"periph.io/x/conn/pin/pinreg"
+	"periph.io/x/host/hostreg"
 )
 
 func printFailures(state *hostreg.State) {

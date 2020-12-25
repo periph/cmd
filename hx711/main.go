@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/conn/physic"
 	"periph.io/x/conn/gpio/gpioutil"
+	"periph.io/x/conn/physic"
 	"periph.io/x/devices/hx711"
 	"periph.io/x/host"
 )

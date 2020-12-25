@@ -7,8 +7,8 @@
 package main
 
 import (
-	"periph.io/x/host/hostreg"
 	"periph.io/x/host"
+	"periph.io/x/host/hostreg"
 )
 
 func hostInit() (*hostreg.State, error) {
