@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"os"
 
-	"periph.io/x/periph/conn/i2c/i2creg"
-	"periph.io/x/periph/experimental/devices/pca9548"
-	"periph.io/x/periph/host"
+	"periph.io/x/conn/i2c/i2creg"
+	"periph.io/x/devices/pca9548"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {

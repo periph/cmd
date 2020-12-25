@@ -7,10 +7,10 @@
 package main
 
 import (
-	"periph.io/x/periph"
-	"periph.io/x/periph/host"
+	"periph.io/x/host/hostreg"
+	"periph.io/x/host"
 )
 
-func hostInit() (*periph.State, error) {
+func hostInit() (*hostreg.State, error) {
 	return host.Init()
 }

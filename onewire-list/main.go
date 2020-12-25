@@ -13,9 +13,9 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/periph/conn/onewire"
-	"periph.io/x/periph/conn/onewire/onewirereg"
-	"periph.io/x/periph/conn/pin/pinreg"
+	"periph.io/x/conn/onewire"
+	"periph.io/x/conn/onewire/onewirereg"
+	"periph.io/x/conn/pin/pinreg"
 )
 
 func mainImpl() error {

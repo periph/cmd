@@ -11,7 +11,7 @@ import (
 	"image/color"
 	"image/draw"
 
-	"periph.io/x/periph/devices/ssd1306/image1bit"
+	"periph.io/x/devices/ssd1306/image1bit"
 )
 
 type bit bool

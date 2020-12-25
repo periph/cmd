@@ -5,15 +5,15 @@
 package main
 
 import (
-	"periph.io/x/periph"
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/conn/i2c"
-	"periph.io/x/periph/conn/i2c/i2creg"
-	"periph.io/x/periph/conn/pin"
-	"periph.io/x/periph/conn/pin/pinreg"
-	"periph.io/x/periph/conn/spi"
-	"periph.io/x/periph/conn/spi/spireg"
+	"periph.io/x/host/hostreg"
+	"periph.io/x/conn/gpio"
+	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/conn/i2c"
+	"periph.io/x/conn/i2c/i2creg"
+	"periph.io/x/conn/pin"
+	"periph.io/x/conn/pin/pinreg"
+	"periph.io/x/conn/spi"
+	"periph.io/x/conn/spi/spireg"
 )
 
 // jsonAPI contains the global state/caches for the JSON API.
@@ -22,7 +22,7 @@ type jsonAPI struct {
 	state    drvState
 }
 
-func (j *jsonAPI) init(hostname string, st *periph.State) {
+func (j *jsonAPI) init(hostname string, st *hostreg.State) {
 	j.hostname = hostname
 	j.state.Loaded = make([]string, len(st.Loaded))
 	for i, v := range st.Loaded {
@@ -273,7 +273,7 @@ type driverFailure struct {
 	Err string
 }
 
-// Similar to periph.State but is JSON marshalable as-is.
+// Similar to hostreg.State but is JSON marshalable as-is.
 type drvState struct {
 	Loaded  []string
 	Skipped []driverFailure

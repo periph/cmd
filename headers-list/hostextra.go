@@ -8,9 +8,9 @@ package main
 
 import (
 	"periph.io/x/extra/hostextra"
-	"periph.io/x/periph"
+	"periph.io/x/host/hostreg"
 )
 
-func hostInit() (*periph.State, error) {
+func hostInit() (*hostreg.State, error) {
 	return hostextra.Init()
 }

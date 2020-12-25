@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/conn/spi/spireg"
-	"periph.io/x/periph/experimental/devices/mfrc522"
-	"periph.io/x/periph/experimental/devices/mfrc522/commands"
-	"periph.io/x/periph/host"
+	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/devices/mfrc522"
+	"periph.io/x/devices/mfrc522/commands"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {

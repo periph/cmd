@@ -14,15 +14,15 @@ import (
 	"os"
 	"time"
 
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/conn/i2c"
-	"periph.io/x/periph/conn/i2c/i2creg"
-	"periph.io/x/periph/conn/physic"
-	"periph.io/x/periph/conn/pin"
-	"periph.io/x/periph/conn/pin/pinreg"
-	"periph.io/x/periph/devices/cap1xxx"
-	"periph.io/x/periph/host"
+	"periph.io/x/conn/gpio"
+	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/conn/i2c"
+	"periph.io/x/conn/i2c/i2creg"
+	"periph.io/x/conn/physic"
+	"periph.io/x/conn/pin"
+	"periph.io/x/conn/pin/pinreg"
+	"periph.io/x/devices/cap1xxx"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {

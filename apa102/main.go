@@ -21,11 +21,11 @@ import (
 	"strings"
 	"time"
 
-	"periph.io/x/periph/conn/display"
-	"periph.io/x/periph/conn/physic"
-	"periph.io/x/periph/conn/spi"
-	"periph.io/x/periph/conn/spi/spireg"
-	"periph.io/x/periph/devices/apa102"
+	"periph.io/x/conn/display"
+	"periph.io/x/conn/physic"
+	"periph.io/x/conn/spi"
+	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/devices/apa102"
 )
 
 func access(name string) bool {
@@ -39,7 +39,7 @@ func findFile(name string) string {
 	}
 	for _, p := range strings.Split(os.Getenv("GOPATH"), ":") {
 		if len(p) != 0 {
-			if p2 := filepath.Join(p, "src/periph.io/x/periph/cmd/apa102", name); access(p2) {
+			if p2 := filepath.Join(p, "src/periph.io/x/cmd/apa102", name); access(p2) {
 				return p2
 			}
 		}

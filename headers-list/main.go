@@ -15,13 +15,13 @@ import (
 	"os"
 	"sort"
 
-	"periph.io/x/periph"
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/pin"
-	"periph.io/x/periph/conn/pin/pinreg"
+	"periph.io/x/host/hostreg"
+	"periph.io/x/conn/gpio"
+	"periph.io/x/conn/pin"
+	"periph.io/x/conn/pin/pinreg"
 )
 
-func printFailures(state *periph.State) {
+func printFailures(state *hostreg.State) {
 	max := 0
 	for _, f := range state.Failed {
 		if m := len(f.D.String()); m > max {

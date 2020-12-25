@@ -17,11 +17,11 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/periph/conn/i2c/i2creg"
-	"periph.io/x/periph/conn/physic"
-	"periph.io/x/periph/conn/spi/spireg"
-	"periph.io/x/periph/devices/lepton"
-	"periph.io/x/periph/devices/lepton/image14bit"
+	"periph.io/x/conn/i2c/i2creg"
+	"periph.io/x/conn/physic"
+	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/devices/lepton"
+	"periph.io/x/devices/lepton/image14bit"
 )
 
 var palette = []color.NRGBA{

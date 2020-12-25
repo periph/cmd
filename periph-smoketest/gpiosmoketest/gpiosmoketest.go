@@ -13,11 +13,11 @@ import (
 	"strconv"
 	"time"
 
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/host/allwinner"
-	"periph.io/x/periph/host/bcm283x"
-	"periph.io/x/periph/host/sysfs"
+	"periph.io/x/conn/gpio"
+	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/host/allwinner"
+	"periph.io/x/host/bcm283x"
+	"periph.io/x/host/sysfs"
 )
 
 // SmokeTest is imported by periph-smoketest.

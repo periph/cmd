@@ -19,11 +19,11 @@ import (
 	"math/rand"
 	"time"
 
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/conn/i2c"
-	"periph.io/x/periph/conn/i2c/i2creg"
-	"periph.io/x/periph/conn/mmr"
+	"periph.io/x/conn/gpio"
+	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/conn/i2c"
+	"periph.io/x/conn/i2c/i2creg"
+	"periph.io/x/conn/mmr"
 )
 
 // SmokeTest is imported by periph-smoketest.

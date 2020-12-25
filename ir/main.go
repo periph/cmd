@@ -17,8 +17,8 @@ import (
 	"os"
 	"os/signal"
 
-	"periph.io/x/periph/devices/lirc"
-	"periph.io/x/periph/host"
+	"periph.io/x/devices/lirc"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {

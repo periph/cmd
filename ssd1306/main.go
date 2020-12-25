@@ -24,16 +24,16 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"periph.io/x/periph/conn/display"
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/conn/i2c"
-	"periph.io/x/periph/conn/i2c/i2creg"
-	"periph.io/x/periph/conn/physic"
-	"periph.io/x/periph/conn/spi"
-	"periph.io/x/periph/conn/spi/spireg"
-	"periph.io/x/periph/devices/ssd1306"
-	"periph.io/x/periph/devices/ssd1306/image1bit"
+	"periph.io/x/conn/display"
+	"periph.io/x/conn/gpio"
+	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/conn/i2c"
+	"periph.io/x/conn/i2c/i2creg"
+	"periph.io/x/conn/physic"
+	"periph.io/x/conn/spi"
+	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/devices/ssd1306"
+	"periph.io/x/devices/ssd1306/image1bit"
 )
 
 func access(name string) bool {
@@ -47,7 +47,7 @@ func findFile(name string) string {
 	}
 	for _, p := range strings.Split(os.Getenv("GOPATH"), ":") {
 		if len(p) != 0 {
-			if p2 := filepath.Join(p, "src/periph.io/x/periph/cmd/ssd1306", name); access(p2) {
+			if p2 := filepath.Join(p, "src/periph.io/x/cmd/ssd1306", name); access(p2) {
 				return p2
 			}
 		}
