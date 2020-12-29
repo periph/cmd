@@ -15,14 +15,14 @@ import (
 	"os"
 	"sort"
 
+	"periph.io/x/conn/driver/driverreg"
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/pin"
 	"periph.io/x/conn/pin/pinreg"
 	"periph.io/x/host"
-	"periph.io/x/host/hostreg"
 )
 
-func printFailures(state *hostreg.State) {
+func printFailures(state *driverreg.State) {
 	max := 0
 	for _, f := range state.Failed {
 		if m := len(f.D.String()); m > max {

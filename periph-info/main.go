@@ -13,11 +13,11 @@ import (
 	"log"
 	"os"
 
+	"periph.io/x/conn/driver/driverreg"
 	"periph.io/x/host"
-	"periph.io/x/host/hostreg"
 )
 
-func printDrivers(drivers []hostreg.DriverFailure) {
+func printDrivers(drivers []driverreg.DriverFailure) {
 	if len(drivers) == 0 {
 		fmt.Print("  <none>\n")
 		return

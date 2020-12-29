@@ -5,6 +5,7 @@
 package main
 
 import (
+	"periph.io/x/conn/driver/driverreg"
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/gpio/gpioreg"
 	"periph.io/x/conn/i2c"
@@ -13,7 +14,6 @@ import (
 	"periph.io/x/conn/pin/pinreg"
 	"periph.io/x/conn/spi"
 	"periph.io/x/conn/spi/spireg"
-	"periph.io/x/host/hostreg"
 )
 
 // jsonAPI contains the global state/caches for the JSON API.
@@ -22,7 +22,7 @@ type jsonAPI struct {
 	state    drvState
 }
 
-func (j *jsonAPI) init(hostname string, st *hostreg.State) {
+func (j *jsonAPI) init(hostname string, st *driverreg.State) {
 	j.hostname = hostname
 	j.state.Loaded = make([]string, len(st.Loaded))
 	for i, v := range st.Loaded {
@@ -272,7 +272,7 @@ type driverFailure struct {
 	Err string
 }
 
-// Similar to hostreg.State but is JSON marshalable as-is.
+// Similar to driverreg.State but is JSON marshalable as-is.
 type drvState struct {
 	Loaded  []string
 	Skipped []driverFailure

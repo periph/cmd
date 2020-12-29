@@ -23,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"periph.io/x/host/hostreg"
+	"periph.io/x/conn/driver/driverreg"
 )
 
 const cacheControlNone = "Cache-Control:no-cache,private"
@@ -65,7 +65,7 @@ func isLocalhost(host string) bool {
 	return false
 }
 
-func newWebServer(hostport string, state *hostreg.State, verbose bool) (*webServer, error) {
+func newWebServer(hostport string, state *driverreg.State, verbose bool) (*webServer, error) {
 	s := &webServer{server: http.Server{Handler: http.DefaultServeMux}}
 	if _, err := rand.Read(s.key[:]); err != nil {
 		return nil, err
