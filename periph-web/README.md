@@ -83,16 +83,3 @@ To use the files in `static/` instead of the ones embedded in the executable by
 ```
 go install -tags debug periph.io/x/cmd/periph-web
 ```
-
-
-# Extended support
-
-If you want to play with a [FTDI FT232H/FT232R](https://periph.io/device/ftdi/),
-you have to build with [periph.io/x/extra](https://periph.io/x/extra) built in.
-You can do with:
-
-```
-go get -u -tags periphextra periph.io/x/cmd/periph-web
-```
-
-Cross-compiling won't work with extra.

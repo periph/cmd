@@ -16,6 +16,7 @@ import (
 
 	"periph.io/x/conn/gpio/gpioreg"
 	"periph.io/x/devices/tm1637"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {
@@ -102,7 +103,7 @@ func mainImpl() error {
 		segments = tm1637.Digits(digits...)
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 

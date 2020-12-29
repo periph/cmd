@@ -17,6 +17,7 @@ import (
 	"periph.io/x/conn/i2c"
 	"periph.io/x/conn/i2c/i2creg"
 	"periph.io/x/conn/physic"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {
@@ -48,7 +49,7 @@ func mainImpl() error {
 		return errors.New("-l must be between 1 and 255")
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 

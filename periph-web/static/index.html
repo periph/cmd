@@ -38,9 +38,6 @@ h1, h2, h3 {
   padding: 10px;
   display: none;
 }
-#periphExtra-section {
-  margin-bottom: 1rem;
-}
 
 @media only screen and (max-width: 500px) {
   * {
@@ -434,7 +431,6 @@ function fetchSPI() {
 function fetchState() {
   postJSON("/api/periph/v1/server/state", {}, res => {
     document.title = "periph-web - " + res.Hostname;
-    document.getElementById("periphExtra").innerText = res.PeriphExtra;
     let root = document.getElementById("section-drivers-loaded");
     if (!res.State.Loaded.length) {
       root.display = "hidden";
@@ -976,9 +972,6 @@ window.customElements.define("spi-elem", class extends HTMLElementTemplate {
 <div id="section-gpio"></div>
 <div id="section-state">
   <h1>periph's state</h1>
-  <div id="periphExtra-section">
-    Using <strong>periph.io/x/extra</strong>: <span id="periphExtra"></span>
-  </div>
   <div>
     <drivers-elem id="section-drivers-loaded"></drivers-elem>
     <drivers-elem id="section-drivers-skipped"></drivers-elem>

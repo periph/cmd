@@ -23,6 +23,7 @@ import (
 	"periph.io/x/conn/spi"
 	"periph.io/x/conn/spi/spireg"
 	"periph.io/x/devices/bmxx80"
+	"periph.io/x/host"
 )
 
 func printPin(fn string, p pin.Pin) {
@@ -129,7 +130,7 @@ func mainImpl() error {
 		opts.Filter = bmxx80.F16
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 

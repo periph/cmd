@@ -15,6 +15,7 @@ import (
 
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/host"
 )
 
 func printLevel(l gpio.Level) error {
@@ -52,7 +53,7 @@ func mainImpl() error {
 		return errors.New("specify GPIO pin to read")
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 

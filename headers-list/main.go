@@ -18,6 +18,7 @@ import (
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/pin"
 	"periph.io/x/conn/pin/pinreg"
+	"periph.io/x/host"
 	"periph.io/x/host/hostreg"
 )
 
@@ -155,7 +156,7 @@ func mainImpl() error {
 		return errors.New("unexpected argument, try -help")
 	}
 
-	state, err := hostInit()
+	state, err := host.Init()
 	if err != nil {
 		return err
 	}

@@ -25,6 +25,7 @@ import (
 	"periph.io/x/conn/physic"
 	"periph.io/x/conn/spi"
 	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/host"
 )
 
 // runTx does the I/O.
@@ -120,7 +121,7 @@ func mainImpl() error {
 		m |= spi.LSBFirst
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 	s, err := spireg.Open(*spiID)

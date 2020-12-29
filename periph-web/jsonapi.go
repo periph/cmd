@@ -263,9 +263,8 @@ func (j *jsonAPI) apiSPIList() ([]spiRef, int) {
 // /api/periph/v1/server/state
 
 type serverStateOut struct {
-	Hostname    string
-	State       drvState
-	PeriphExtra bool
+	Hostname string
+	State    drvState
 }
 
 type driverFailure struct {
@@ -282,9 +281,8 @@ type drvState struct {
 
 func (j *jsonAPI) apiServerState() (*serverStateOut, int) {
 	out := &serverStateOut{
-		Hostname:    j.hostname,
-		State:       j.state,
-		PeriphExtra: periphExtra,
+		Hostname: j.hostname,
+		State:    j.state,
 	}
 	return out, 200
 }

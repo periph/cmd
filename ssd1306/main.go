@@ -34,6 +34,7 @@ import (
 	"periph.io/x/conn/spi/spireg"
 	"periph.io/x/devices/ssd1306"
 	"periph.io/x/devices/ssd1306/image1bit"
+	"periph.io/x/host"
 )
 
 func access(name string) bool {
@@ -154,7 +155,7 @@ func mainImpl() error {
 		return errors.New("unexpected argument, try -help")
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 

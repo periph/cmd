@@ -13,6 +13,7 @@ import (
 	"log"
 	"os"
 
+	"periph.io/x/host"
 	"periph.io/x/host/hostreg"
 )
 
@@ -43,7 +44,7 @@ func mainImpl() error {
 		return errors.New("unexpected argument, try -help")
 	}
 
-	state, err := hostInit()
+	state, err := host.Init()
 	if err != nil {
 		return err
 	}

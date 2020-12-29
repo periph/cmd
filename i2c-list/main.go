@@ -17,6 +17,7 @@ import (
 	"periph.io/x/conn/i2c/i2creg"
 	"periph.io/x/conn/pin"
 	"periph.io/x/conn/pin/pinreg"
+	"periph.io/x/host"
 )
 
 func printPin(fn string, p pin.Pin) {
@@ -39,7 +40,7 @@ func mainImpl() error {
 		return errors.New("unexpected argument, try -help")
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 	for _, ref := range i2creg.All() {

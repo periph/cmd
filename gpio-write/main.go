@@ -15,6 +15,7 @@ import (
 
 	"periph.io/x/conn/gpio"
 	"periph.io/x/conn/gpio/gpioreg"
+	"periph.io/x/host"
 )
 
 func mainImpl() error {
@@ -38,7 +39,7 @@ func mainImpl() error {
 		return errors.New("specify level as 0 or 1")
 	}
 
-	if _, err := hostInit(); err != nil {
+	if _, err := host.Init(); err != nil {
 		return err
 	}
 

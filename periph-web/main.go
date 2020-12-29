@@ -13,6 +13,8 @@ import (
 	"log"
 	"os"
 	"os/signal"
+
+	"periph.io/x/host"
 )
 
 func mainImpl() error {
@@ -26,7 +28,7 @@ func mainImpl() error {
 		log.SetOutput(ioutil.Discard)
 	}
 	log.SetFlags(log.Lmicroseconds)
-	state, err := hostInit()
+	state, err := host.Init()
 	if err != nil {
 		return err
 	}
