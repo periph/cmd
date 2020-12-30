@@ -12,11 +12,11 @@ import (
 	"strconv"
 	"time"
 
-	"periph.io/x/conn/physic"
+	"periph.io/x/conn/v3/physic"
 
-	"periph.io/x/conn/i2c/i2creg"
-	"periph.io/x/devices/ccs811"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/i2c/i2creg"
+	"periph.io/x/devices/v3/ccs811"
+	"periph.io/x/host/v3"
 )
 
 func main() {

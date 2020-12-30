@@ -11,10 +11,10 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/conn/spi/spireg"
-	"periph.io/x/devices/st7567"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/conn/v3/spi/spireg"
+	"periph.io/x/devices/v3/st7567"
+	"periph.io/x/host/v3"
 )
 
 var (

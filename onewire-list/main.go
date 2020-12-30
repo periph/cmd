@@ -13,10 +13,10 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/conn/onewire"
-	"periph.io/x/conn/onewire/onewirereg"
-	"periph.io/x/conn/pin/pinreg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/onewire"
+	"periph.io/x/conn/v3/onewire/onewirereg"
+	"periph.io/x/conn/v3/pin/pinreg"
+	"periph.io/x/host/v3"
 )
 
 func mainImpl() error {

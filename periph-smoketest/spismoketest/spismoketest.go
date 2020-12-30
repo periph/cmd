@@ -18,12 +18,12 @@ import (
 	"math/rand"
 	"time"
 
-	"periph.io/x/conn/gpio"
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/conn/physic"
-	"periph.io/x/conn/spi"
-	"periph.io/x/conn/spi/spireg"
-	"periph.io/x/host/fs"
+	"periph.io/x/conn/v3/gpio"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/conn/v3/physic"
+	"periph.io/x/conn/v3/spi"
+	"periph.io/x/conn/v3/spi/spireg"
+	"periph.io/x/host/v3/fs"
 )
 
 var (

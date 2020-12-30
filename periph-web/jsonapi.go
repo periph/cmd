@@ -5,15 +5,15 @@
 package main
 
 import (
-	"periph.io/x/conn/driver/driverreg"
-	"periph.io/x/conn/gpio"
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/conn/i2c"
-	"periph.io/x/conn/i2c/i2creg"
-	"periph.io/x/conn/pin"
-	"periph.io/x/conn/pin/pinreg"
-	"periph.io/x/conn/spi"
-	"periph.io/x/conn/spi/spireg"
+	"periph.io/x/conn/v3/driver/driverreg"
+	"periph.io/x/conn/v3/gpio"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/conn/v3/i2c"
+	"periph.io/x/conn/v3/i2c/i2creg"
+	"periph.io/x/conn/v3/pin"
+	"periph.io/x/conn/v3/pin/pinreg"
+	"periph.io/x/conn/v3/spi"
+	"periph.io/x/conn/v3/spi/spireg"
 )
 
 // jsonAPI contains the global state/caches for the JSON API.

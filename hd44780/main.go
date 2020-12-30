@@ -12,10 +12,10 @@ import (
 	"os"
 	"strings"
 
-	"periph.io/x/conn/gpio"
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/devices/hd44780"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/gpio"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/devices/v3/hd44780"
+	"periph.io/x/host/v3"
 )
 
 func mainFunc() error {

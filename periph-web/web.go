@@ -23,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"periph.io/x/conn/driver/driverreg"
+	"periph.io/x/conn/v3/driver/driverreg"
 )
 
 const cacheControlNone = "Cache-Control:no-cache,private"

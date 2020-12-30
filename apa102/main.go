@@ -21,12 +21,12 @@ import (
 	"strings"
 	"time"
 
-	"periph.io/x/conn/display"
-	"periph.io/x/conn/physic"
-	"periph.io/x/conn/spi"
-	"periph.io/x/conn/spi/spireg"
-	"periph.io/x/devices/apa102"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/display"
+	"periph.io/x/conn/v3/physic"
+	"periph.io/x/conn/v3/spi"
+	"periph.io/x/conn/v3/spi/spireg"
+	"periph.io/x/devices/v3/apa102"
+	"periph.io/x/host/v3"
 )
 
 func access(name string) bool {

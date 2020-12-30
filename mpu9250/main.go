@@ -11,11 +11,11 @@ import (
 	"log"
 	"time"
 
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/host/v3"
 
-	"periph.io/x/devices/mpu9250"
-	"periph.io/x/devices/mpu9250/accelerometer"
+	"periph.io/x/devices/v3/mpu9250"
+	"periph.io/x/devices/v3/mpu9250/accelerometer"
 )
 
 var (

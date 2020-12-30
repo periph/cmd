@@ -22,10 +22,10 @@ import (
 	"os"
 	"strconv"
 
-	"periph.io/x/conn/physic"
-	"periph.io/x/conn/spi"
-	"periph.io/x/conn/spi/spireg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/physic"
+	"periph.io/x/conn/v3/spi"
+	"periph.io/x/conn/v3/spi/spireg"
+	"periph.io/x/host/v3"
 )
 
 // runTx does the I/O.

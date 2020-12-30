@@ -22,22 +22,22 @@ periph-web exposes a [JSON API](jsonapi.go) to enable the web UI:
 Getters (read only, no side effect):
 
 - `/api/periph/v1/gpio/aliases`: returns GPIO aliases in
-  [gpioreg](https://periph.io/x/conn/gpio/gpioreg).
+  [gpioreg](https://periph.io/x/conn/v3/gpio/gpioreg).
 - `/api/periph/v1/gpio/list`: returns all registered GPIOs in
-  [gpioreg](https://periph.io/x/conn/gpio/gpioreg), even the ones not on
-  board headers ([pinreg](https://periph.io/x/conn/pin/pinreg)).
+  [gpioreg](https://periph.io/x/conn/v3/gpio/gpioreg), even the ones not on
+  board headers ([pinreg](https://periph.io/x/conn/v3/pin/pinreg)).
 - `/api/periph/v1/header/list`: returns all registered headers in
-  [pinreg](https://periph.io/x/conn/pin/pinreg).
+  [pinreg](https://periph.io/x/conn/v3/pin/pinreg).
 - `/api/periph/v1/i2c/list`: returns all registered I²C buses in
-  [i2creg](https://periph.io/x/conn/i2c/i2creg).
+  [i2creg](https://periph.io/x/conn/v3/i2c/i2creg).
 - `/api/periph/v1/spi/list`: returns all registered SPI ports in
-  [spireg](https://periph.io/x/conn/spi/spireg).
+  [spireg](https://periph.io/x/conn/v3/spi/spireg).
 - `/api/periph/v1/server/state`: returns the loaded periph drivers.
 
 Actions:
 
 - `/api/periph/v1/gpio/read`: accepts a list of GPIO names and return their
-  [gpio.Level](https://periph.io/x/conn/gpio) as 0 or 1.
+  [gpio.Level](https://periph.io/x/conn/v3/gpio) as 0 or 1.
 - `/api/periph/v1/gpio/out`: sets the output of GPIOs specified as a dict of
   {gpio pin name: level at 0 or 1}.
 - `/raw/periph/v1/xsrf_token`: returns a fresh XSRF token as a raw string. This

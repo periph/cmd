@@ -13,8 +13,8 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/conn/driver/driverreg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/driver/driverreg"
+	"periph.io/x/host/v3"
 )
 
 func printDrivers(drivers []driverreg.DriverFailure) {

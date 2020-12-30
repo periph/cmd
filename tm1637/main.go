@@ -14,9 +14,9 @@ import (
 	"os"
 	"strconv"
 
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/devices/tm1637"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/devices/v3/tm1637"
+	"periph.io/x/host/v3"
 )
 
 func mainImpl() error {

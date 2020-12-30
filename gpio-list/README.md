@@ -30,7 +30,7 @@ then running:
     sudo systemctl disable hciuart
 
 For more information for enabling functional pins, see
-[![GoDoc](https://godoc.org/periph.io/x/host/rpi?status.svg)](https://godoc.org/periph.io/x/host/rpi).
+[![GoDoc](https://godoc.org/periph.io/x/host/v3/rpi?status.svg)](https://godoc.org/periph.io/x/host/v3/rpi).
 
 
 ### Aliases

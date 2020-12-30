@@ -14,7 +14,7 @@ import (
 	"os"
 	"os/signal"
 
-	"periph.io/x/host"
+	"periph.io/x/host/v3"
 )
 
 func mainImpl() error {

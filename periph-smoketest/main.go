@@ -19,14 +19,14 @@ import (
 	"periph.io/x/cmd/periph-smoketest/i2csmoketest"
 	"periph.io/x/cmd/periph-smoketest/onewiresmoketest"
 	"periph.io/x/cmd/periph-smoketest/spismoketest"
-	"periph.io/x/devices/bmxx80/bmx280smoketest"
-	"periph.io/x/devices/ssd1306/ssd1306smoketest"
-	"periph.io/x/host"
-	"periph.io/x/host/allwinner/allwinnersmoketest"
-	"periph.io/x/host/bcm283x/bcm283xsmoketest"
-	"periph.io/x/host/chip/chipsmoketest"
-	"periph.io/x/host/odroidc1/odroidc1smoketest"
-	"periph.io/x/host/sysfs/sysfssmoketest"
+	"periph.io/x/devices/v3/bmxx80/bmx280smoketest"
+	"periph.io/x/devices/v3/ssd1306/ssd1306smoketest"
+	"periph.io/x/host/v3"
+	"periph.io/x/host/v3/allwinner/allwinnersmoketest"
+	"periph.io/x/host/v3/bcm283x/bcm283xsmoketest"
+	"periph.io/x/host/v3/chip/chipsmoketest"
+	"periph.io/x/host/v3/odroidc1/odroidc1smoketest"
+	"periph.io/x/host/v3/sysfs/sysfssmoketest"
 )
 
 // SmokeTest must be implemented by a smoke test. It will be run by this

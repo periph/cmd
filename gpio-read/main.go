@@ -13,9 +13,9 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/conn/gpio"
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/gpio"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/host/v3"
 )
 
 func printLevel(l gpio.Level) error {

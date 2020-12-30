@@ -14,11 +14,11 @@ import (
 	"os"
 	"sort"
 
-	"periph.io/x/conn/gpio"
-	"periph.io/x/conn/gpio/gpioreg"
-	"periph.io/x/conn/pin"
-	"periph.io/x/conn/pin/pinreg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/gpio"
+	"periph.io/x/conn/v3/gpio/gpioreg"
+	"periph.io/x/conn/v3/pin"
+	"periph.io/x/conn/v3/pin/pinreg"
+	"periph.io/x/host/v3"
 )
 
 func printAliases(invalid bool) {

@@ -13,11 +13,11 @@ import (
 	"log"
 	"os"
 
-	"periph.io/x/conn/i2c"
-	"periph.io/x/conn/i2c/i2creg"
-	"periph.io/x/conn/pin"
-	"periph.io/x/conn/pin/pinreg"
-	"periph.io/x/host"
+	"periph.io/x/conn/v3/i2c"
+	"periph.io/x/conn/v3/i2c/i2creg"
+	"periph.io/x/conn/v3/pin"
+	"periph.io/x/conn/v3/pin/pinreg"
+	"periph.io/x/host/v3"
 )
 
 func printPin(fn string, p pin.Pin) {
