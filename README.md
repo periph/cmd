@@ -1,16 +1,17 @@
 # periph - Peripherals I/O in Go
 
-[![mascot](https://raw.githubusercontent.com/periph/website/master/site/static/img/periph-mascot-280.png)](https://periph.io/)
-
 Documentation is at https://periph.io
+
+Join us for a chat on
+[gophers.slack.com/messages/periph](https://gophers.slack.com/messages/periph),
+get an [invite here](https://invite.slack.golangbridge.org/).
+
+[![mascot](https://raw.githubusercontent.com/periph/website/master/site/static/img/periph-mascot-280.png)](https://periph.io/)
 
 [![PkgGoDev](https://pkg.go.dev/badge/periph.io/x/cmd)](https://pkg.go.dev/periph.io/x/cmd)
 [![Coverage
 Status](https://codecov.io/gh/periph/devices/graph/badge.svg)](https://codecov.io/gh/periph/devices)
 
-Join us for a chat on
-[gophers.slack.com/messages/periph](https://gophers.slack.com/messages/periph),
-get an [invite here](https://invite.slack.golangbridge.org/).
 
 # cmd - ready-to-use executables
 
@@ -19,6 +20,7 @@ This directory contains directly usable tools installable via:
 ```
 go get periph.io/x/cmd/...
 ```
+
 
 ## Push
 
@@ -31,6 +33,7 @@ rsync:
 go get -u periph.io/x/bootstrap/cmd/push
 push -host pi@raspberrypi periph.io/x/cmd/...
 ```
+
 
 ## Recommended first use
 
