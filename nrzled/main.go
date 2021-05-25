@@ -148,8 +148,8 @@ func mainImpl() error {
 	{
 		var err error
 		if spiID != nil {
-			s, err := spireg.Open(*spiID)
-			if err != nil {
+			var s spi.PortCloser
+			if s, err = spireg.Open(*spiID); err != nil {
 				return err
 			}
 			defer s.Close()

@@ -55,7 +55,7 @@ func mainImpl() error {
 		return err
 	}
 
-	if _, err := host.Init(); err != nil {
+	if _, err = host.Init(); err != nil {
 		return err
 	}
 

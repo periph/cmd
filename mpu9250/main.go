@@ -58,7 +58,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := dev.Init(); err != nil {
+	if err = dev.Init(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -74,8 +74,11 @@ func main() {
 	fmt.Printf("Dev ID: %x\n", id)
 
 	st, err := dev.SelfTest()
+	if err != nil {
+		log.Fatal("Self test failed", err)
+	}
 
-	if err := dev.Calibrate(); err != nil {
+	if err = dev.Calibrate(); err != nil {
 		log.Fatal("Can't calibrate", err)
 	}
 

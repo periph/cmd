@@ -63,7 +63,7 @@ func mainImpl() error {
 	}
 
 	if hz != 0 {
-		if err := i2cBus.SetSpeed(hz); err != nil {
+		if err = i2cBus.SetSpeed(hz); err != nil {
 			return fmt.Errorf("couldn't set the i2c bus speed - %s", err)
 		}
 	}
@@ -73,7 +73,7 @@ func mainImpl() error {
 	if alertPin == nil {
 		return errors.New("invalid alert GPIO pin number")
 	}
-	if err := alertPin.In(gpio.PullUp, gpio.BothEdges); err != nil {
+	if err = alertPin.In(gpio.PullUp, gpio.BothEdges); err != nil {
 		return err
 	}
 	log.Printf("cap1xxx: alert pin: %#v", alertPin)
@@ -94,29 +94,29 @@ func mainImpl() error {
 
 	userAskedToLinkLEDs := opts.LinkedLEDs
 	// unlinked LED demo
-	if err := dev.LinkLEDs(false); err != nil {
+	if err = dev.LinkLEDs(false); err != nil {
 		log.Printf("Failed to unlink leds: %v", err)
 	}
 	for i := 0; i < 8; i++ {
-		if err := dev.SetLED(i, true); err != nil {
+		if err = dev.SetLED(i, true); err != nil {
 			return err
 		}
 		time.Sleep(75 * time.Millisecond)
 	}
 	time.Sleep(200 * time.Millisecond)
-	if err := dev.AllLEDs(false); err != nil {
+	if err = dev.AllLEDs(false); err != nil {
 		return err
 	}
 	time.Sleep(100 * time.Millisecond)
-	if err := dev.AllLEDs(true); err != nil {
+	if err = dev.AllLEDs(true); err != nil {
 		return err
 	}
 	time.Sleep(100 * time.Millisecond)
-	if err := dev.AllLEDs(false); err != nil {
+	if err = dev.AllLEDs(false); err != nil {
 		return err
 	}
 	if userAskedToLinkLEDs {
-		if err := dev.LinkLEDs(true); err != nil {
+		if err = dev.LinkLEDs(true); err != nil {
 			log.Printf("Failed to relink leds: %v", err)
 		}
 	}
@@ -126,12 +126,12 @@ func mainImpl() error {
 		var status [8]cap1xxx.TouchStatus
 		for {
 			if alertPin.WaitForEdge(-1) {
-				if err := dev.InputStatus(status[:]); err != nil {
+				if err = dev.InputStatus(status[:]); err != nil {
 					log.Printf("Error reading inputs: %s", err)
 				}
 				printSensorsStatus(status[:])
 				// We need to clear the interrupt so it can be triggered again.
-				if err := dev.ClearInterrupt(); err != nil {
+				if err = dev.ClearInterrupt(); err != nil {
 					log.Printf("%v", err)
 				}
 			}

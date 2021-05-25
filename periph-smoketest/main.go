@@ -89,7 +89,7 @@ func mainImpl() error {
 	fs := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 	verbose := fs.Bool("v", false, "verbose mode")
 	fs.Usage = func() { usage(fs) }
-	if err := fs.Parse(os.Args[1:]); err == flag.ErrHelp {
+	if err = fs.Parse(os.Args[1:]); err == flag.ErrHelp {
 		return nil
 	} else if err != nil {
 		return err

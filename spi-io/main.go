@@ -44,8 +44,8 @@ func runTx(s spi.Conn, args []string) error {
 	} else {
 		hex = true
 		for _, b := range args {
-			i, err := strconv.ParseUint(b, 0, 8)
-			if err != nil {
+			i := uint64(0)
+			if i, err = strconv.ParseUint(b, 0, 8); err != nil {
 				return err
 			}
 			write = append(write, byte(i))

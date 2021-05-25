@@ -419,7 +419,7 @@ func mainImpl() error {
 	}
 	defer spiPort.Close()
 	if spiHz != 0 {
-		if err := spiPort.LimitSpeed(spiHz); err != nil {
+		if err = spiPort.LimitSpeed(spiHz); err != nil {
 			return err
 		}
 	}
@@ -430,7 +430,7 @@ func mainImpl() error {
 	}
 	defer i2cBus.Close()
 	if i2cHz != 0 {
-		if err := i2cBus.SetSpeed(i2cHz); err != nil {
+		if err = i2cBus.SetSpeed(i2cHz); err != nil {
 			return err
 		}
 	}

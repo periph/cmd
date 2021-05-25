@@ -133,8 +133,8 @@ func mainImpl() error {
 			return errors.New("data bytes must contain exactly 16 elements")
 		}
 		for i := range defaultDataBytes {
-			intVal, err := strconv.ParseUint(bytesBuffer[i], 10, 8)
-			if err != nil {
+			intVal := uint64(0)
+			if intVal, err = strconv.ParseUint(bytesBuffer[i], 10, 8); err != nil {
 				return err
 			}
 			defaultDataBytes[i] = byte(intVal)

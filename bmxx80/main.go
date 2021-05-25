@@ -148,7 +148,7 @@ func mainImpl() error {
 			printPin("CS", p.CS())
 		}
 		if hz != 0 {
-			if err := s.LimitSpeed(hz); err != nil {
+			if err = s.LimitSpeed(hz); err != nil {
 				return err
 			}
 		}
@@ -166,7 +166,7 @@ func mainImpl() error {
 			printPin("SDA", p.SDA())
 		}
 		if hz != 0 {
-			if err := i.SetSpeed(hz); err != nil {
+			if err = i.SetSpeed(hz); err != nil {
 				return err
 			}
 		}

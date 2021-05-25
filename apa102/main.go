@@ -152,7 +152,7 @@ func mainImpl() error {
 	}
 	defer s.Close()
 	if hz != 0 {
-		if err := s.LimitSpeed(hz); err != nil {
+		if err = s.LimitSpeed(hz); err != nil {
 			return err
 		}
 	}
@@ -172,8 +172,8 @@ func mainImpl() error {
 
 	// Load an image and make it loop through the pixels.
 	if len(*imgName) != 0 {
-		img, err := loadImg(*imgName)
-		if err != nil {
+		var img image.Image
+		if img, err = loadImg(*imgName); err != nil {
 			return err
 		}
 		showImage(disp, img, time.Duration(*lineMs)*time.Millisecond, *imgLoop, *imgHeight)

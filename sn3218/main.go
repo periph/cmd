@@ -31,22 +31,22 @@ func main() {
 	}
 	defer d.Halt()
 
-	if err := d.WakeUp(); err != nil {
+	if err = d.WakeUp(); err != nil {
 		log.Fatal("Error while enabling device", err)
 	}
 
-	if err := d.BrightnessAll(1); err != nil {
+	if err = d.BrightnessAll(1); err != nil {
 		log.Fatal("Error while setting brightness", err)
 	}
 
 	// Switch LED 7 on
-	if err := d.Switch(7, true); err != nil {
+	if err = d.Switch(7, true); err != nil {
 		log.Fatal("Error while switching LED", err)
 	}
 	time.Sleep(1000 * time.Millisecond)
 
 	//Increase brightness for LED 7 to max
-	if err := d.Brightness(7, 255); err != nil {
+	if err = d.Brightness(7, 255); err != nil {
 		log.Fatal("Error while changing LED brightness", err)
 	}
 	time.Sleep(1000 * time.Millisecond)
@@ -59,25 +59,25 @@ func main() {
 	log.Println("State: ", state, " - Brightness: ", brightness)
 
 	// Switch all LEDs on
-	if err := d.SwitchAll(true); err != nil {
+	if err = d.SwitchAll(true); err != nil {
 		log.Fatal("Error while switching all LEDs", err)
 	}
 	time.Sleep(1000 * time.Millisecond)
 
 	// Increase brightness for all
-	if err := d.BrightnessAll(125); err != nil {
+	if err = d.BrightnessAll(125); err != nil {
 		log.Fatal("Error while changing globalBrightness", err)
 	}
 	time.Sleep(1000 * time.Millisecond)
 
 	// Sleep mode to save energy, but keep state
-	if err := d.Sleep(); err != nil {
+	if err = d.Sleep(); err != nil {
 		log.Fatal("Error while disabling device")
 	}
 	time.Sleep(1000 * time.Millisecond)
 
 	// WakeUp again
-	if err := d.WakeUp(); err != nil {
+	if err = d.WakeUp(); err != nil {
 		log.Fatal("Error while enabling device")
 	}
 	time.Sleep(1000 * time.Millisecond)

@@ -69,7 +69,8 @@ func loadImg(name string) (image.Image, *gif.GIF, error) {
 	defer f.Close()
 
 	// Try to decode as an animated GIF first, then fall back to generic decoding.
-	if g, err := gif.DecodeAll(f); err == nil {
+	var g *gif.GIF
+	if g, err = gif.DecodeAll(f); err == nil {
 		if len(g.Image) > 1 {
 			log.Printf("Image %s as animated GIF", name)
 			return nil, g, nil
@@ -169,7 +170,7 @@ func mainImpl() error {
 		}
 		defer c.Close()
 		if hz != 0 {
-			if err := c.LimitSpeed(hz); err != nil {
+			if err = c.LimitSpeed(hz); err != nil {
 				return err
 			}
 		}
@@ -192,7 +193,7 @@ func mainImpl() error {
 		}
 		defer c.Close()
 		if hz != 0 {
-			if err := c.SetSpeed(hz); err != nil {
+			if err = c.SetSpeed(hz); err != nil {
 				return err
 			}
 		}
