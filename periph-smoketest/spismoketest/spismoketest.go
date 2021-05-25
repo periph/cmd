@@ -27,10 +27,7 @@ import (
 )
 
 var (
-	iorMode        = fs.IOR('k', 1, 1)
-	iorLSBFirst    = fs.IOR('k', 2, 1)
-	iorBitsPerWord = fs.IOR('k', 3, 1)
-	iorMaxSpeedHz  = fs.IOR('k', 4, 4)
+	iorMode = fs.IOR('k', 1, 1)
 )
 
 // SmokeTest is imported by periph-smoketest.
