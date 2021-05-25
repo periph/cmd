@@ -25,6 +25,7 @@ import (
 	"periph.io/x/host/v3/allwinner/allwinnersmoketest"
 	"periph.io/x/host/v3/bcm283x/bcm283xsmoketest"
 	"periph.io/x/host/v3/chip/chipsmoketest"
+	"periph.io/x/host/v3/ftdi/ftdismoketest"
 	"periph.io/x/host/v3/odroidc1/odroidc1smoketest"
 	"periph.io/x/host/v3/sysfs/sysfssmoketest"
 )
@@ -52,6 +53,7 @@ var tests = []SmokeTest{
 	&bmx280smoketest.SmokeTest{},
 	&chipsmoketest.SmokeTest{},
 	&gpiosmoketest.SmokeTest{},
+	&ftdismoketest.SmokeTest{},
 	&i2csmoketest.SmokeTest{},
 	&odroidc1smoketest.SmokeTest{},
 	&onewiresmoketest.SmokeTest{},
