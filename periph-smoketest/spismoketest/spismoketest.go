@@ -23,11 +23,6 @@ import (
 	"periph.io/x/conn/v3/physic"
 	"periph.io/x/conn/v3/spi"
 	"periph.io/x/conn/v3/spi/spireg"
-	"periph.io/x/host/v3/fs"
-)
-
-var (
-	iorMode = fs.IOR('k', 1, 1)
 )
 
 // SmokeTest is imported by periph-smoketest.
@@ -72,15 +67,6 @@ func (s *SmokeTest) Run(f *flag.FlagSet, args []string) error {
 	c, err := spiDev.Connect(4*physic.MegaHertz, spi.Mode0, 8)
 	if err != nil {
 		return fmt.Errorf("error setting SPI parameters: %v", err)
-	}
-
-	type flagGetter interface{ GetFlag(uint) (uint64, error) }
-	mode, err := c.(flagGetter).GetFlag(iorMode)
-	if err != nil {
-		return fmt.Errorf("failed to read back mode: %v", err)
-	}
-	if spi.Mode(mode) != spi.Mode0 {
-		return fmt.Errorf("read back mode doesn't match spi.Mode0: %v", spi.Mode(mode))
 	}
 
 	// Open the WC pin.
