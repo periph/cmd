@@ -7,7 +7,7 @@ module periph.io/x/cmd
 go 1.13
 
 require (
-	periph.io/x/conn/v3 v3.6.7
-	periph.io/x/devices/v3 v3.6.7
-	periph.io/x/host/v3 v3.6.7
+	periph.io/x/conn/v3 v3.6.8
+	periph.io/x/devices/v3 v3.6.10
+	periph.io/x/host/v3 v3.7.0
 )
