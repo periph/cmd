@@ -2,6 +2,7 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// st7567 displays an image on a ST7567 dot matrix LCD.
 package main
 
 import (
@@ -17,35 +18,25 @@ import (
 	"periph.io/x/host/v3"
 )
 
-var (
-	spiPort  = flag.String("spi", "SPI0.0", "Name or number of SPI port to open")
-	dcPin    = flag.String("dc", "6", "DC pin")
-	resetPin = flag.String("reset", "5", "Reset pin")
-	csPin    = flag.String("cs", "8", "Chip select pin")
-
-	contrast  = flag.Int("contrast", 58, "The contrast of the LCD valid values are between 0-63")
-	startLine = flag.Int("startLine", 0, "The start line valid values are between 0-63")
-	path      = flag.String("image", "", "The path to the PNG which should be painted on the LCD")
-
-	bias               = st7567.Bias17
-	segmentDirection   = st7567.SegmentDirNormal
-	comDirection       = st7567.CommonDirReverse
-	display            = st7567.DisplayNormal
-	regulationResistor = st7567.RegulationRatio{st7567.RegResistorRR0, st7567.RegResistorRR1}
-)
-
-func main() {
-	if err := mainImpl(); err != nil {
-		fmt.Fprintf(os.Stderr, "st7567: %s.\n", err)
-		os.Exit(1)
-	}
-}
-
 func mainImpl() error {
+	spiPort := flag.String("spi", "SPI0.0", "Name or number of SPI port to open")
+	dcPin := flag.String("dc", "6", "DC pin")
+	resetPin := flag.String("reset", "5", "Reset pin")
+	csPin := flag.String("cs", "8", "Chip select pin")
+
+	contrast := flag.Int("contrast", 58, "The contrast of the LCD valid values are between 0-63")
+	startLine := flag.Int("startLine", 0, "The start line valid values are between 0-63")
+	path := flag.String("image", "", "The path to the PNG which should be painted on the LCD")
+
+	bias := st7567.Bias17
 	flag.Var(&bias, "bias", "Selects bias setting (17 for 1/7 or 19 for 1/9)")
+	segmentDirection := st7567.SegmentDirNormal
 	flag.Var(&segmentDirection, "segmentDir", "The direction of the segments (normal or reverse")
+	comDirection := st7567.CommonDirReverse
 	flag.Var(&comDirection, "commonDir", "Changes the vertical display direction (normal or reverse)")
+	display := st7567.DisplayNormal
 	flag.Var(&display, "display", "the Display should be in normal or inverse mode (normal or inverse")
+	regulationResistor := st7567.RegulationRatio{st7567.RegResistorRR0, st7567.RegResistorRR1}
 	flag.Var(&regulationResistor, "reg", "Comma-separated list of the regulation ratio of the built-in regulator. (RR0, RR1 or RR2)")
 	flag.Parse()
 
@@ -120,4 +111,11 @@ func mainImpl() error {
 	}
 
 	return dev.Update()
+}
+
+func main() {
+	if err := mainImpl(); err != nil {
+		fmt.Fprintf(os.Stderr, "st7567: %s.\n", err)
+		os.Exit(1)
+	}
 }

@@ -2,6 +2,7 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// hx711 reads from a 24-bits HX711 analog to digital converter.
 package main
 
 import (
@@ -19,7 +20,7 @@ import (
 
 const timeout = time.Second
 
-func mainFunc() error {
+func mainImpl() error {
 	clkPin := flag.String("clk", "", "Clock pin")
 	dataPin := flag.String("data", "", "Data pin")
 	gain := flag.Int("gain", 128,
@@ -91,7 +92,7 @@ func mainFunc() error {
 }
 
 func main() {
-	if err := mainFunc(); err != nil {
+	if err := mainImpl(); err != nil {
 		fmt.Fprintf(os.Stderr, "hx711: %s.\n", err)
 		os.Exit(1)
 	}

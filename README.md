@@ -9,8 +9,6 @@ get an [invite here](https://invite.slack.golangbridge.org/).
 [![mascot](https://raw.githubusercontent.com/periph/website/master/site/static/img/periph-mascot-280.png)](https://periph.io/)
 
 [![PkgGoDev](https://pkg.go.dev/badge/periph.io/x/cmd)](https://pkg.go.dev/periph.io/x/cmd)
-[![Coverage
-Status](https://codecov.io/gh/periph/devices/graph/badge.svg)](https://codecov.io/gh/periph/devices)
 
 
 # cmd - ready-to-use executables
