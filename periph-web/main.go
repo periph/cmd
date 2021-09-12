@@ -37,7 +37,7 @@ func mainImpl() error {
 		return err
 	}
 	fmt.Printf("Listening on %s as %s\n", s.server.Addr, s.apis.hostname)
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	go func() { <-c }()
 	signal.Notify(c, os.Interrupt)
 	<-c
