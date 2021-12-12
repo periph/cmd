@@ -1,5 +1,3 @@
-github.com/fogleman/gg v1.3.0/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
-github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
 github.com/jonboulle/clockwork v0.2.2 h1:UOGuzwb1PwsrDAObMuhUnj0p5ULPj8V/xJ7Kx9qUBdQ=
 github.com/jonboulle/clockwork v0.2.2/go.mod h1:Pkfl5aHPm1nk2H9h0bjmnJD/BcgbGXUBGnn1kMkgxc8=
 github.com/maruel/ansi256 v1.0.2/go.mod h1:x7uow2KFkUgjdzvYHyfZuMEOTGKvCYLyVUHIVg1vYic=
@@ -15,7 +13,7 @@ periph.io/x/conn/v3 v3.6.9 h1:cSAvXC6IRRYC9pTW/Fzhp0a7zq+aeAxV8+/JZ+oxwZI=
 periph.io/x/conn/v3 v3.6.9/go.mod h1:UqWNaPMosWmNCwtufoTSTTYhB2wXWsMRAJyo1PlxO4Q=
 periph.io/x/d2xx v0.0.4 h1:R1Yejby5Ny6cVRo94RlMgXFtpp6AJrsVNAAjQCQx5rA=
 periph.io/x/d2xx v0.0.4/go.mod h1:38Euaaj+s6l0faIRHh32a+PrjXvxFTFkPBEQI0TKg34=
-periph.io/x/devices/v3 v3.6.12 h1:7p/RzKGvLKvul24LANcRAaB6oX7IsZs7sZ3rZlbEK7Q=
-periph.io/x/devices/v3 v3.6.12/go.mod h1:9wsFFIh7I53OYVaPFib5Iacvm/FeSyj3YRBpBiuaCQE=
+periph.io/x/devices/v3 v3.6.13-0.20211210231915-5b35a3fb05bf h1:JpQchWEa86KRa8oQrl2mba7YuApSKxXVOmx/ce51O0o=
+periph.io/x/devices/v3 v3.6.13-0.20211210231915-5b35a3fb05bf/go.mod h1:ldtpaoSzjPnJeFarHfNh9ZlIbBe3rZXlinXPWEYv11o=
 periph.io/x/host/v3 v3.7.1 h1:SAe/7IWSOoFsqh2/74+SxbqehzOPny+jAPs25fd/NUI=
 periph.io/x/host/v3 v3.7.1/go.mod h1:kqMB+cJHtIPQCCMqDoiIMwr0pu1p+qQObkrPha3mX6E=
