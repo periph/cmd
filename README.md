@@ -82,6 +82,8 @@ it](https://periph.io/project/contributing/).
 - [periph-smoketest](periph-smoketest): Runs one of the smoke test for the
   drivers. The smoke test differs from unit tests as they require real hardware
   to confirm that the driver being tested works.
+- [videosink](videosink): Demonstrates how to provide display contents to HTTP
+  clients.
 
 
 ## Troubleshooting
