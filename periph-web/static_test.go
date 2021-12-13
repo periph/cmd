@@ -16,7 +16,7 @@ import (
 func TestContent(t *testing.T) {
 	if _, err := exec.Command("minify", "-h").CombinedOutput(); err != nil {
 		if strings.HasSuffix(err.Error(), exec.ErrNotFound.Error()) {
-			t.Skip("Please install minify with: go get github.com/tdewolff/minify/cmd/minify")
+			t.Skip("Please install minify with: go install github.com/tdewolff/minify/cmd/minify@latest")
 		}
 		t.Fatal(err)
 	}

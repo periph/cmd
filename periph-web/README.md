@@ -10,7 +10,7 @@ Web UI and JSON API server for [periph.io](https://periph.io).
 Try it now:
 
 ```
-go get -u periph.io/x/cmd/periph-web
+go install -u periph.io/x/cmd/periph-web@latest
 periph-web
 ```
 
