@@ -38,6 +38,7 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
+	/* #nosec G307 */
 	defer f.Close()
 
 	img, err := png.Decode(f)

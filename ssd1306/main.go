@@ -2,7 +2,6 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-//go:generate go get golang.org/x/image/font golang.org/x/image/font/basicfont golang.org/x/image/math/fixed
 //go:generate go run gen.go
 
 // ssd1306 writes to a display driven by a ssd1306 controler.
@@ -62,10 +61,12 @@ func loadImg(name string) (image.Image, *gif.GIF, error) {
 	if len(p) == 0 {
 		return nil, nil, fmt.Errorf("couldn't find file %s", name)
 	}
+	/* #nosec G304 */
 	f, err := os.Open(p)
 	if err != nil {
 		return nil, nil, err
 	}
+	/* #nosec G307 */
 	defer f.Close()
 
 	// Try to decode as an animated GIF first, then fall back to generic decoding.

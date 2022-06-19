@@ -146,6 +146,7 @@ func (s *SmokeTest) eeprom(bus onewire.Bus, addr onewire.Address) error {
 	// Start by writing some data to the scratchpad
 	var data [8]byte
 	for i := range data {
+		/* #nosec G404 */
 		data[i] = byte(rand.Intn(256))
 	}
 	var buf [13]byte // cmd, target-addr-low, target-addr-hi, data[8], crc16

@@ -54,10 +54,12 @@ func loadImg(name string) (image.Image, error) {
 	if len(p) == 0 {
 		return nil, fmt.Errorf("couldn't find file %s", name)
 	}
+	/* #nosec G304 */
 	f, err := os.Open(p)
 	if err != nil {
 		return nil, err
 	}
+	/* #nosec G307 */
 	defer f.Close()
 
 	img, _, err := image.Decode(f)

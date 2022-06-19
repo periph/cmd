@@ -152,6 +152,7 @@ func (s *SmokeTest) eeprom(d spi.Conn, wpPin gpio.PinIO) error {
 
 	// Pick a byte in the first 256 bytes and try to write it and read it back a couple
 	// of times. Using a random byte for "wear leveling"...
+	/* #nosec G404 */
 	addr := [2]byte{0, byte(rand.Intn(256))} // 16-bit big-endian address
 	values := []byte{0x55, 0xAA, 0xF0, 0x0F, 0x13}
 	log.Printf("%s: writing&reading EEPROM byte %#x", s, addr[1])
@@ -178,8 +179,10 @@ func (s *SmokeTest) eeprom(d spi.Conn, wpPin gpio.PinIO) error {
 	// Pick a page in the first 256 bytes and try to write it and read it back.
 	// Using a random page for "wear leveling" and randomizing what gets written
 	// so it actually changes from one test run to the next.
+	/* #nosec G404 */
 	addr[1] = byte(rand.Intn(256)) & 0xe0 // round to page boundary
-	r := byte(rand.Intn(256))             // randomizer for value written
+	/* #nosec G404 */
+	r := byte(rand.Intn(256)) // randomizer for value written
 	log.Printf("%s: writing&reading EEPROM page %#x", s, addr)
 	// val calculates the value for byte i.
 	val := func(i int) byte { return byte((i<<4)|(16-(i>>1))) ^ r }

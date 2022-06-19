@@ -40,10 +40,12 @@ func mainImpl() error {
 	flag.Var(&regulationResistor, "reg", "Comma-separated list of the regulation ratio of the built-in regulator. (RR0, RR1 or RR2)")
 	flag.Parse()
 
+	/* #nosec G304 */
 	f, err := os.Open(*path)
 	if err != nil {
 		return err
 	}
+	/* #nosec G307 */
 	defer f.Close()
 
 	img, err := png.Decode(f)

@@ -373,10 +373,12 @@ func grabFrame(dev *lepton.Dev, path string, meta bool) error {
 		fmt.Printf("FFCDesired:   %t\n", frame.Metadata.FFCDesired)
 		fmt.Printf("Overtemp:     %t\n", frame.Metadata.Overtemp)
 	}
+	/* #nosec G304 */
 	f, err := os.Create(path)
 	if err != nil {
 		return err
 	}
+	/* #nosec G307 */
 	defer f.Close()
 	return png.Encode(f, reduce(frame.Gray14))
 }

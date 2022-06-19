@@ -7,7 +7,7 @@ package main
 import (
 	"crypto/hmac"
 	"crypto/rand"
-	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/base64"
 	"encoding/json"
@@ -66,7 +66,12 @@ func isLocalhost(host string) bool {
 }
 
 func newWebServer(hostport string, state *driverreg.State, verbose bool) (*webServer, error) {
-	s := &webServer{server: http.Server{Handler: http.DefaultServeMux}}
+	s := &webServer{
+		server: http.Server{
+			Handler:           http.DefaultServeMux,
+			ReadHeaderTimeout: 10 * time.Second,
+		},
+	}
 	if _, err := rand.Read(s.key[:]); err != nil {
 		return nil, err
 	}
@@ -110,7 +115,7 @@ func newWebServer(hostport string, state *driverreg.State, verbose bool) (*webSe
 
 func (s *webServer) generateToken(userID string, now time.Time) string {
 	milliTime := (now.UnixNano() + 1e6 - 1) / 1e6
-	h := hmac.New(sha1.New, s.key[:])
+	h := hmac.New(sha256.New, s.key[:])
 	fmt.Fprintf(h, "%d:%s", milliTime, userID)
 	return fmt.Sprintf("%x:%s", milliTime, strings.TrimRight(base64.URLEncoding.EncodeToString(h.Sum(nil)), "="))
 }
