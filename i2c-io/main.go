@@ -35,7 +35,7 @@ func mainImpl() error {
 		log.SetOutput(ioutil.Discard)
 	}
 	log.SetFlags(log.Lmicroseconds)
-	if flag.NArg() != 0 {
+	if !*write && flag.NArg() != 0 {
 		return errors.New("unexpected argument, try -help")
 	}
 
