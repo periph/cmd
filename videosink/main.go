@@ -77,5 +77,11 @@ func main() {
 			</html>`,
 			dev.Bounds().Dx(), dev.Bounds().Dy())
 	})
-	log.Fatal(http.ListenAndServe(*listenAddr, nil))
+	s := &http.Server{
+		Addr:              *listenAddr,
+		ReadHeaderTimeout: 6 * time.Second,
+	}
+	if err := s.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
 }

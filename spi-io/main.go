@@ -6,8 +6,9 @@
 // arguments and outputs hex encoded output.
 //
 // Usage:
-//   echo -n -e '\x88\x00' | spi-io -b SPI0.0 | hexdump
-//   spi-io -b SPI0.0 0x88 0
+//
+//	echo -n -e '\x88\x00' | spi-io -b SPI0.0 | hexdump
+//	spi-io -b SPI0.0 0x88 0
 //
 // For "read only" operation, writes zeros.
 // For "write only" operation, ignore stdout.
