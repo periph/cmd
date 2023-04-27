@@ -233,7 +233,9 @@ func (s *webServer) api(h interface{}) http.HandlerFunc {
 		panic("pass func that returns two args")
 	}
 	return s.enforceXSRF(func(w http.ResponseWriter, r *http.Request) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		if r.Method != "POST" {
 			http.Error(w, "Only POST is allowed", http.StatusMethodNotAllowed)
 			return
