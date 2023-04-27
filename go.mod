@@ -4,7 +4,7 @@
 
 module periph.io/x/cmd
 
-go 1.17
+go 1.20
 
 require (
 	golang.org/x/image v0.1.0
