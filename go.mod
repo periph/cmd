@@ -7,11 +7,11 @@ module periph.io/x/cmd
 go 1.22
 
 require (
-	golang.org/x/image v0.1.0
-	periph.io/x/conn/v3 v3.7.0
-	periph.io/x/d2xx v0.1.0
-	periph.io/x/devices/v3 v3.7.0
-	periph.io/x/host/v3 v3.8.0
+	golang.org/x/image v0.19.0
+	periph.io/x/conn/v3 v3.7.1
+	periph.io/x/d2xx v0.1.1
+	periph.io/x/devices/v3 v3.7.1
+	periph.io/x/host/v3 v3.8.2
 )
 
-require github.com/jonboulle/clockwork v0.3.0 // indirect
+require github.com/jonboulle/clockwork v0.4.0 // indirect
