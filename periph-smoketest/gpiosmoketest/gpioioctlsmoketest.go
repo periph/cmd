@@ -1,14 +1,13 @@
-// Copyright 2025 The Periph Authors. All rights reserved.
+// Copyright 2024 The Periph Authors. All rights reserved.
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
-
-// Package gpioioctlsmoketest is leveraged by periph-smoketest to verify that basic
-// GPIO pin functionality works.
+//
+// Functional smoke test for the host/gpioioctl package.
 package gpiosmoketest
 
 import (
-    "errors"
-    "flag"
+	"errors"
+	"flag"
 	"log"
 )
 
@@ -37,7 +36,7 @@ func (st *SmokeTestT) Log(args ...any) {
 	log.Println(args...)
 }
 func (st *SmokeTestT) Logf(format string, args ...any) {
-    log.Printf(format, args...)
+	log.Printf(format, args...)
 }
 func (st *SmokeTestT) ErrorsOrFatals() bool {
 	return st.error || st.fatal
@@ -69,9 +68,8 @@ func (s *SmokeTest) Run(f *flag.FlagSet, args []string) error {
 	TestLineSetHalt(st)
 	TestLineSetWaitForEdge(st)
 	TestLineSetConfigWithOverride(st)
-    if st.ErrorsOrFatals() {
-        return errors.New("Smoketest failure.")
-    }
-    return nil
+	if st.ErrorsOrFatals() {
+		return errors.New("Smoketest failure.")
+	}
+	return nil
 }
-

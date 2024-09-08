@@ -3,14 +3,14 @@ package gpiosmoketest
 // Copyright 2024 The Periph Authors. All rights reserved.
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
-//
+
 // This is the set of tests for the LineSet functionality.
 
 import (
 	"time"
 
 	"periph.io/x/conn/v3/gpio"
-    "periph.io/x/host/v3/gpioioctl"
+	"periph.io/x/host/v3/gpioioctl"
 )
 
 var outputLines = []string{"GPIO2", "GPIO3", "GPIO4", "GPIO5", "GPIO6", "GPIO7", "GPIO8", "GPIO9"}

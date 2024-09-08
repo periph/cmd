@@ -12,7 +12,7 @@ import (
 
 	"periph.io/x/conn/v3/driver/driverreg"
 	"periph.io/x/conn/v3/gpio"
-    "periph.io/x/host/v3/gpioioctl"
+	"periph.io/x/host/v3/gpioioctl"
 )
 
 const (
@@ -22,6 +22,25 @@ const (
 
 func init() {
 	_, _ = driverreg.Init()
+}
+
+// Test the consumer field. Since this actually configures a line for output,
+// it actually tests a fair amount of the code to request a line, and configure
+// it.
+func TestConsumer(t *SmokeTestT) {
+	l := gpioioctl.Chips[0].ByName(_OUT_LINE)
+	if l == nil {
+		t.Fatalf("Error retrieving GPIO Line %s", _OUT_LINE)
+	}
+	defer l.Close()
+	// Consumer isn't written until the line is configured.
+	err := l.Out(true)
+	if err != nil {
+		t.Errorf("l.Out() %s", err)
+	}
+	if len(l.Consumer()) == 0 {
+		t.Error("No consumer name found.")
+	}
 }
 
 func TestWriteReadSinglePin(t *SmokeTestT) {
