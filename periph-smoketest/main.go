@@ -27,7 +27,6 @@ import (
 	"periph.io/x/host/v3/chip/chipsmoketest"
 	"periph.io/x/host/v3/ftdi/ftdismoketest"
 	"periph.io/x/host/v3/odroidc1/odroidc1smoketest"
-	"periph.io/x/host/v3/sysfs/sysfssmoketest"
 )
 
 // SmokeTest must be implemented by a smoke test. It will be run by this
@@ -59,7 +58,6 @@ var tests = []SmokeTest{
 	&onewiresmoketest.SmokeTest{},
 	&spismoketest.SmokeTest{},
 	&ssd1306smoketest.SmokeTest{},
-	&sysfssmoketest.Benchmark{},
 }
 
 func usage(fs *flag.FlagSet) {

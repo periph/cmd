@@ -1,70 +1,73 @@
-# 'gpio' smoke test
+# Testing
 
-Verifies that the library physically work. It requires the user to connect two
-GPIO pins together and provide their pin number at the command line.
+The tests implemented perform *functional* tests of the library. This means that 
+the tests performed interact with a GPIO chipset, and perform actual read/write 
+operations. Using this test set, it's possible to quickly and accurately check 
+if the library is working as expected on a specific hardware/kernel combination.
 
-Example output running on a Raspberry Pi:
+## Requirements
+
+Although the library is not Raspberry Pi specific, the GPIO pin names used for 
+tests are.
+
+As written, the tests must be executed on a Raspberry Pi SBC running Linux. Tested 
+models are:
+
+* Raspberry Pi 3B
+* Raspberry Pi Zero W
+* Raspberry Pi 4
+* Raspberry Pi 5
+
+You must also have the golang SDK installed.
+
+## Setting Up
+
+In order to execute the functional tests, you must jumper the sets of pins shown 
+below together.
+
+For example, the single line tests require GPIO5 and GPIO13 to be connected to 
+each other, so a jumper is required between pins 29 and 33. For the multi-line 
+tests to work, you must connect the following GPIO pins together with jumpers.
+
+| GPIO Output | Output Pin # | GPIO Input | Input Pin # |
+| ----------- | ------------ | ---------- | ----------- |
+| GPIO2       |            3 | GPIO10     |          19 |
+| GPIO3       |            5 | GPIO11     |          23 |
+| GPIO4       |            7 | GPIO12     |          32 |
+| GPIO5       |           29 | GPIO13     |          33 |
+| GPIO6       |           31 | GPIO14     |           8 |
+| GPIO7       |           26 | GPIO15     |          10 |
+| GPIO8       |           24 | GPIO16     |          36 |
+| GPIO9       |           21 | GPIO17     |          11 |
+
+## Cross-Compiling
+If you don't have a working go installation on the target machine, you can cross
+compile from one machine and then copy the test binary to the target machine.
+
+To cross compile for Raspberry Pi, execute the command:
+
+```bash
+$periph.io/x/host/gpioctl> GOOS=linux GOARCH=arm64 go test -c
+$periph.io/x/host/gpioctl> scp gpioioctl.test user@test.machine:~
+$periph.io/x/host/gpioctl> ssh user@test.machine
+$user> ./gpioioctl.test -test.v
+```
+for Pi Zero W, use:
+
+```bash
+$periph.io/x/host/gpioctl> GOOS=linux GOARCH=arm GOARM=6 go test -c
+$periph.io/x/host/gpioctl> scp gpioioctl.test user@test.machine:~
+$periph.io/x/host/gpioctl> ssh user@test.machine
+$user> ./gpioioctl.test -test.v
 
 ```
-$ gpio-test 12 6
-Using drivers:
-  - bcm283x
-  - rpi
-  - sysfs-gpio
-  - sysfs-spi
-  - sysfs-i2c
-Using pins and their current state:
-- GPIO12: In/High
-- GPIO6: In/High
 
-Testing GPIO6 -> GPIO12
-  Testing base functionality
-    GPIO12.In(Float)
-    GPIO6.Out(Low)
-    -> GPIO12: In/Low
-    -> GPIO6: Out/Low
-    GPIO6.Out(High)
-    -> GPIO12: In/High
-    -> GPIO6: Out/High
-  Testing edges
-    GPIO12.Edges()
-    GPIO6.Out(Low)
-    Low <- GPIO12
-    GPIO6.Out(High)
-    High <- GPIO12
-    GPIO6.Out(Low)
-    Low <- GPIO12
-    GPIO12.DisableEdges()
-  Testing pull resistor
-    GPIO6.In(Down)
-    -> GPIO12: In/Low
-    -> GPIO6: In/Low
-    GPIO6.In(Up)
-    -> GPIO12: In/High
-    -> GPIO6: In/High
-Testing GPIO12 -> GPIO6
-  Testing base functionality
-    GPIO6.In(Float)
-    GPIO12.Out(Low)
-    -> GPIO6: In/Low
-    -> GPIO12: Out/Low
-    GPIO12.Out(High)
-    -> GPIO6: In/High
-    -> GPIO12: Out/High
-  Testing edges
-    GPIO6.Edges()
-    GPIO12.Out(Low)
-    Low <- GPIO6
-    GPIO12.Out(High)
-    High <- GPIO6
-    GPIO12.Out(Low)
-    Low <- GPIO6
-    GPIO6.DisableEdges()
-  Testing pull resistor
-    GPIO12.In(Down)
-    -> GPIO6: In/Low
-    -> GPIO12: In/Low
-    GPIO12.In(Up)
-    -> GPIO6: In/High
-    -> GPIO12: In/High
+## Executing the Tests
+
+After connecting the jumper wires as shown above, and you have golang installed 
+and the go/bin directory in the path, change to this directory and execute the 
+command:
+
+```bash
+$> go test -v -cover
 ```
