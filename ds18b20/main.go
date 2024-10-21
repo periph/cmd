@@ -2,12 +2,12 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 //
-// This program enumerates onewire buses for  DS18B20 sensors and 
+// This program enumerates onewire buses for  DS18B20 sensors and
 // continuously reading them.
 //
 // If you get the error no buses were found, ensure that onewire buses
 // are enabled. On a Raspberry Pi, run raspi-config, Interface Options,
-// and enable 1-Wire. Remember to reboot after enabling it.																	  
+// and enable 1-Wire. Remember to reboot after enabling it.
 package main
 
 import (
@@ -21,7 +21,7 @@ import (
 	"periph.io/x/host/v3"
 )
 
-// For the Dallas onewire devices, the conversion time is dependent on the 
+// For the Dallas onewire devices, the conversion time is dependent on the
 // resolution. Refer to the Datasheet for more information.
 const DefaultBits = 10
 
@@ -69,7 +69,7 @@ func main() {
 		if len(newSensors) > 0 {
 			// Do an initial convert on all devices on the bus.
 			err = ds18b20.ConvertAll(bus, DefaultBits)
-			if err!=nil {
+			if err != nil {
 				log.Println(err)
 			}
 			buses = append(buses, bus)
@@ -94,16 +94,16 @@ func main() {
 				out += fmt.Sprintf("%.2f ", t.Celsius())
 			} else {
 				log.Print(err)
-				out+="err "
+				out += "err "
 			}
-			
+
 		}
 		fmt.Println(out)
-		
+
 		for _, bus := range buses {
 			// Start the conversion cycle running while we're sleeping ...
 			err := ds18b20.StartAll(bus)
-			if err!=nil {
+			if err != nil {
 				log.Println(err)
 			}
 		}
