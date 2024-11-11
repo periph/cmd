@@ -7,10 +7,10 @@ module periph.io/x/cmd
 go 1.22.6
 
 require (
-	golang.org/x/image v0.19.0
+	golang.org/x/image v0.22.0
 	periph.io/x/conn/v3 v3.7.1
 	periph.io/x/d2xx v0.1.1
-	periph.io/x/devices/v3 v3.7.1
+	periph.io/x/devices/v3 v3.7.2
 	periph.io/x/host/v3 v3.8.2
 )
 
