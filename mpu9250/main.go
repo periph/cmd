@@ -19,7 +19,6 @@ import (
 
 	"periph.io/x/devices/v3/mpu9250"
 	"periph.io/x/devices/v3/mpu9250/accelerometer"
-	// "periph.io/x/devices/v3/mpu9250/reg"
 )
 
 var (
