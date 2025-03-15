@@ -96,7 +96,7 @@ func main() {
 	}
 
 	if err = dev.Calibrate(); err != nil {
-		log.Println("Can't calibrate: ", err)
+		log.Fatal("Can't calibrate: ", err)
 	}
 
 	fmt.Printf("Accelerometer Deviation: X: %.2f%%, Y: %.2f%%, Z:%.2f%%\n", st.AccelDeviation.X, st.AccelDeviation.Y, st.AccelDeviation.Z)
