@@ -11,14 +11,20 @@ import (
 	"log"
 	"time"
 
+	"periph.io/x/conn/v3/i2c"
+	"periph.io/x/conn/v3/i2c/i2creg"
+
 	"periph.io/x/conn/v3/gpio/gpioreg"
 	"periph.io/x/host/v3"
 
 	"periph.io/x/devices/v3/mpu9250"
 	"periph.io/x/devices/v3/mpu9250/accelerometer"
+	// "periph.io/x/devices/v3/mpu9250/reg"
 )
 
 var (
+	ifType      = flag.String("iftype", "spi", "Interface Type (spi, i2c)")
+	i2cAddr     = flag.Int("i2caddr", 0x68, "I2C Address - Default 0x68")
 	accRes      = flag.String("accRes", "2", "Acceleration resolution (2, 4, 8, 16G)")
 	continuous  = flag.Bool("cont", false, "Continuous read")
 	sensitivity int
@@ -44,16 +50,28 @@ func main() {
 	if _, err := host.Init(); err != nil {
 		log.Fatal("Error initializing host", err)
 	}
-	cs := gpioreg.ByName("8")
-	if cs == nil {
-		log.Fatal("Can't initialize CS pin")
+
+	var t *mpu9250.Transport
+	var err error
+
+	if *ifType == "spi" {
+		cs := gpioreg.ByName("8")
+		if cs == nil {
+			log.Fatal("Can't initialize CS pin")
+		}
+		t, err = mpu9250.NewSpiTransport("", cs)
+	} else {
+		var bus i2c.Bus
+		bus, err = i2creg.Open("")
+		if err == nil {
+			t, err = mpu9250.NewI2cTransport(bus, uint16(*i2cAddr))
+		}
 	}
-	t, err := mpu9250.NewSpiTransport("", cs)
 	if err != nil {
-		log.Fatal("Can't initialize SPI bus ", err)
+		log.Fatalf("Can't initialize %s bus: %s", *ifType, err)
 	}
 
-	dev, err := mpu9250.New(t)
+	dev, err := mpu9250.New(*t)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,18 +90,25 @@ func main() {
 	}
 
 	fmt.Printf("Dev ID: %x\n", id)
-
+	err = dev.EnableGyro()
+	if err != nil {
+		log.Println(err)
+	}
+	err = dev.Reset()
+	if err != nil {
+		log.Println(err)
+	}
+	err = dev.EnableTemperature()
+	if err != nil {
+		log.Println(err)
+	}
 	st, err := dev.SelfTest()
 	if err != nil {
-		log.Fatal("Self test failed", err)
+		log.Fatal("Self test failed: ", err)
 	}
 
 	if err = dev.Calibrate(); err != nil {
-		log.Fatal("Can't calibrate", err)
-	}
-
-	if err != nil {
-		log.Fatal("Can't render self-test ", err)
+		log.Println("Can't calibrate: ", err)
 	}
 
 	fmt.Printf("Accelerometer Deviation: X: %.2f%%, Y: %.2f%%, Z:%.2f%%\n", st.AccelDeviation.X, st.AccelDeviation.Y, st.AccelDeviation.Z)
