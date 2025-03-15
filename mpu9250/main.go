@@ -89,18 +89,7 @@ func main() {
 	}
 
 	fmt.Printf("Dev ID: %x\n", id)
-	err = dev.EnableGyro()
-	if err != nil {
-		log.Println(err)
-	}
-	err = dev.Reset()
-	if err != nil {
-		log.Println(err)
-	}
-	err = dev.EnableTemperature()
-	if err != nil {
-		log.Println(err)
-	}
+
 	st, err := dev.SelfTest()
 	if err != nil {
 		log.Fatal("Self test failed: ", err)
