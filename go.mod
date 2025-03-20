@@ -6,8 +6,6 @@ module periph.io/x/cmd
 
 go 1.23.0
 
-toolchain go1.24.1
-
 require (
 	golang.org/x/image v0.25.0
 	periph.io/x/conn/v3 v3.7.2
