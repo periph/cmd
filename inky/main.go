@@ -22,15 +22,15 @@ import (
 func mainImpl() error {
 	spiPort := flag.String("spi", "SPI0.0", "Name or number of SPI port to open")
 	path := flag.String("image", "", "Path to a png file to display on the inky")
-	dcPin := flag.String("dc", "22", "Inky DC Pin")
-	resetPin := flag.String("reset", "27", "Inky Reset Pin")
-	busyPin := flag.String("busy", "17", "Inky Busy Pin")
-	model := inky.PHAT
-	flag.Var(&model, "model", "Inky model (PHAT or WHAT)")
-	modelColor := inky.Red
-	flag.Var(&modelColor, "model-color", "Inky model color (black, red or yellow)")
-	borderColor := inky.Black
-	flag.Var(&borderColor, "border-color", "Border color (black, white, red or yellow)")
+	dcPin := flag.String("dc", "GPIO22", "Inky DC Pin")
+	resetPin := flag.String("reset", "GPIO27", "Inky Reset Pin")
+	busyPin := flag.String("busy", "GPIO17", "Inky Busy Pin")
+	model := inky.IMPRESSION73
+	flag.Var(&model, "model", "Inky model (PHAT, PHAT2, WHAT, IMPRESSION4, IMPRESSION57, or IMPRESSION73)")
+	modelColor := inky.Multi
+	flag.Var(&modelColor, "model-color", "Inky model color (multi, black, red or yellow)")
+	borderColor := inky.Red
+	flag.Var(&borderColor, "border-color", "Border color (multi, black, white, red or yellow)")
 	flag.Parse()
 
 	// Open and decode the image.
@@ -73,16 +73,26 @@ func mainImpl() error {
 	}
 
 	log.Printf("Creating inky...")
-	dev, err := inky.New(b, dc, reset, busy, &inky.Opts{
+	opts := &inky.Opts{
 		Model:       model,
 		ModelColor:  modelColor,
 		BorderColor: borderColor,
-	})
-	if err != nil {
-		return err
 	}
 
 	log.Printf("Drawing image...")
+
+	if model <= inky.PHAT2 {
+		dev, eInky := inky.New(b, dc, reset, busy, opts)
+		if eInky != nil {
+			return eInky
+		}
+		return dev.Draw(img.Bounds(), img, image.Point{})
+	}
+
+	dev, err := inky.NewImpression(b, dc, reset, busy, opts)
+	if err != nil {
+		return err
+	}
 	return dev.Draw(img.Bounds(), img, image.Point{})
 }
 
