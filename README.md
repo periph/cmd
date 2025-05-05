@@ -16,7 +16,7 @@ get an [invite here](https://invite.slack.golangbridge.org/).
 This directory contains directly usable tools installable via:
 
 ```
-go get periph.io/x/cmd/...
+go install periph.io/x/cmd/...@latest
 ```
 
 
@@ -28,7 +28,7 @@ https://github.com/periph/bootstrap) to cross compile and efficiently push via
 rsync:
 
 ```
-go get -u periph.io/x/bootstrap/cmd/push
+go install periph.io/x/bootstrap/cmd/push@latest
 push -host pi@raspberrypi periph.io/x/cmd/...
 ```
 
