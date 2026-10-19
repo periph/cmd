@@ -145,7 +145,7 @@ func mainImpl() error {
 				}
 			}
 			if err = t.Run(f, fs.Args()[1:]); err == nil {
-				log.Printf("Test %s successful", cmd)
+				log.Printf("Test %q successful", t.Name())
 			}
 			return err
 		}

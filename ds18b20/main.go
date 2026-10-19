@@ -1,9 +1,8 @@
 // Copyright 2024 The Periph Authors. All rights reserved.
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
-//
-// This program enumerates onewire buses for  DS18B20 sensors and
-// continuously reading them.
+
+// ds18b20 enumerates 1-wire buses and continuously reads DS18B20 sensors.
 //
 // If you get the error no buses were found, ensure that onewire buses
 // are enabled. On a Raspberry Pi, run raspi-config, Interface Options,

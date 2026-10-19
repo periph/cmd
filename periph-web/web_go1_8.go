@@ -2,6 +2,8 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// Gracefully shut down the HTTP server using the Go 1.8 API.
+
 //go:build go1.8
 // +build go1.8
 

@@ -2,7 +2,8 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-//go:generate go install github.com/tdewolff/minify/v2/cmd/minify@latest
+// Serve web pages, static assets, and XSRF tokens.
+
 //go:generate go run internal/static_gen.go -o static_prod.go
 
 package main
@@ -61,7 +62,8 @@ func (s *webServer) apiXSRFTokenHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	t := s.setXSRFCookie(r.RemoteAddr, w)
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Cache-Control", cacheControlNone)
 	w.WriteHeader(200)
 	_, _ = w.Write([]byte(t))

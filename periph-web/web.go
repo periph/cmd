@@ -2,6 +2,8 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// Web server routing, request validation, sessions, and XSRF protection.
+
 package main
 
 import (
@@ -11,6 +13,7 @@ import (
 	"crypto/subtle"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -140,9 +143,12 @@ func (s *webServer) validateToken(token string, userID string) bool {
 func (s *webServer) setXSRFCookie(addr string, w http.ResponseWriter) string {
 	t := s.generateToken(strings.SplitN(addr, ":", 2)[0], time.Now())
 	c := http.Cookie{
-		Name:   "XSRF-TOKEN",
-		Value:  t,
-		MaxAge: 23 * 60 * 60,
+		Name:     "XSRF-TOKEN",
+		Value:    t,
+		Path:     "/",
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+		MaxAge:   23 * 60 * 60,
 	}
 	http.SetCookie(w, &c)
 	return t
@@ -257,16 +263,24 @@ func (s *webServer) api(h interface{}) http.HandlerFunc {
 			inv := reflect.New(inT)
 			if err := d.Decode(inv.Interface()); err != nil {
 				http.Error(w, fmt.Sprintf("Malformed user data: %v", err), 400)
+				return
 			}
 			in = append(in, inv.Elem())
 		} else {
 			var m map[string]string
 			if err := d.Decode(&m); err != nil {
 				http.Error(w, fmt.Sprintf("Malformed user data: %v", err), 400)
+				return
 			}
 			if len(m) != 0 {
 				http.Error(w, "Unexpected data", 400)
+				return
 			}
+		}
+		var extra any
+		if err := d.Decode(&extra); !errors.Is(err, io.EOF) {
+			http.Error(w, "Expected one JSON value", http.StatusBadRequest)
+			return
 		}
 		out := v.Call(in)
 		raw, err := json.Marshal(out[0].Interface())

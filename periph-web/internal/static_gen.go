@@ -61,10 +61,7 @@ func fillData(base string, content, raw []string) ([][2]string, error) {
 			return nil, err
 		}
 		ext := filepath.Ext(n)
-		if r, err = pipe([]string{"minify", "--type", ext[1:]}, bytes.NewReader(r)); err != nil {
-			if strings.HasSuffix(err.Error(), exec.ErrNotFound.Error()) {
-				return nil, errors.New("Please install minify with: go install github.com/tdewolff/minify/cmd/minify@latest")
-			}
+		if r, err = pipe([]string{"go", "tool", "minify", "--type", ext[1:]}, bytes.NewReader(r)); err != nil {
 			return nil, err
 		}
 		data = append(data, [2]string{strconv.Quote(strings.Replace(p, "\\", "/", -1)), fmt.Sprintf("[]byte(%q)", r)})

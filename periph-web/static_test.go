@@ -2,6 +2,8 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// Tests embedded web assets against regenerated minified sources.
+
 package main
 
 import (
@@ -9,17 +11,10 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 )
 
 func TestContent(t *testing.T) {
-	if _, err := exec.Command("minify", "-h").CombinedOutput(); err != nil {
-		if strings.HasSuffix(err.Error(), exec.ErrNotFound.Error()) {
-			t.Skip("Please install minify with: go install github.com/tdewolff/minify/cmd/minify@latest")
-		}
-		t.Fatal(err)
-	}
 	actual, err := ioutil.ReadFile("static_prod.go")
 	if err != nil {
 		t.Fatal(err)

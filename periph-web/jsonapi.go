@@ -2,6 +2,8 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// JSON endpoints for GPIO, I²C, SPI, and other registered hardware interfaces.
+
 package main
 
 import (

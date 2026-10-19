@@ -2,6 +2,8 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+// JSON decoder compatibility shim for builds without Go 1.10 APIs.
+
 //go:build !go1.10
 // +build !go1.10
 
