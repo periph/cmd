@@ -8,6 +8,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -35,15 +36,19 @@ func mainImpl() error {
 	// Open default I²C bus.
 	bus, err := i2creg.Open(*i2cbus)
 	if err != nil {
-		return fmt.Errorf("failed to open I²C: %v", err)
+		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 
 	// Create a new power sensor a sense with default options of 100 mΩ, 3.2A at
 	// address of 0x40 if no other address supplied with command line option.
 	sensor, err := ina219.New(bus, &ina219.Opts{Address: *address})
 	if err != nil {
-		return fmt.Errorf("failed to open new sensor: %v", err)
+		return fmt.Errorf("failed to open new sensor: %w", err)
 	}
 
 	// Read values from sensor every second.
@@ -58,7 +63,7 @@ func mainImpl() error {
 		case <-everySecond:
 			p, err := sensor.Sense()
 			if err != nil {
-				return fmt.Errorf("sensor reading error: %v", err)
+				return fmt.Errorf("sensor reading error: %w", err)
 			}
 			fmt.Println(p)
 		case <-halt:

@@ -8,6 +8,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"periph.io/x/conn/v3/i2c/i2creg"
@@ -32,7 +33,11 @@ func mainImpl() error {
 	if err != nil {
 		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 	adc, err := ads1x15.NewADS1015(bus, &ads1x15.DefaultOpts)
 	if err != nil {
 		return err
@@ -43,7 +48,11 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
-	defer pin.Halt()
+	defer func() {
+		if closeErr := pin.Halt(); closeErr != nil {
+			log.Printf("Halt pin: %v", closeErr)
+		}
+	}()
 
 	// Read values from ADC.
 	fmt.Println("Single reading")

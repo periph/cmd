@@ -82,7 +82,11 @@ func (j *jsonAPI) apiGPIOAliases() ([]pinAlias, int) {
 	all := gpioreg.Aliases()
 	out := make([]pinAlias, 0, len(all))
 	for _, p := range all {
-		r := p.(gpio.RealPin).Real()
+		alias, ok := p.(gpio.RealPin)
+		if !ok {
+			continue
+		}
+		r := alias.Real()
 		out = append(out, pinAlias{p.Name(), r.Name()})
 	}
 	return out, 200

@@ -20,7 +20,7 @@ import (
 	"periph.io/x/devices/v3/videosink"
 )
 
-func main() {
+func run() error {
 	listenAddr := flag.String("listen-addr", ":8080", "Address and port to listen on")
 	flag.Parse()
 
@@ -38,7 +38,7 @@ func main() {
 		img := image.NewRGBA(dev.Bounds())
 		draw.Draw(img, img.Bounds(), image.White, image.Point{}, draw.Src)
 
-		size := int(img.Bounds().Dy() / 30)
+		size := img.Bounds().Dy() / 30
 		pos := 0
 
 		fgcolor := &color.Gray{}
@@ -67,21 +67,27 @@ func main() {
 	fmt.Fprintf(os.Stderr, "Starting HTTP server on %q\n", *listenAddr)
 
 	http.Handle("/display", dev)
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, `
+	http.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
+		if _, err := fmt.Fprintf(w, `
 			<!DOCTYPE html>
 			<html><head></head>
 			<body style="background: #ccc;">
 			<img src="/display" width="%d" height="%d" style="border: 1px solid #000;">
 			</body>
 			</html>`,
-			dev.Bounds().Dx(), dev.Bounds().Dy())
+			dev.Bounds().Dx(), dev.Bounds().Dy()); err != nil {
+			log.Printf("write page: %v", err)
+		}
 	})
 	s := &http.Server{
 		Addr:              *listenAddr,
 		ReadHeaderTimeout: 6 * time.Second,
 	}
-	if err := s.ListenAndServe(); err != nil {
+	return s.ListenAndServe()
+}
+
+func main() {
+	if err := run(); err != nil {
 		log.Fatal(err)
 	}
 }

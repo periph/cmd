@@ -15,35 +15,43 @@ import (
 	"periph.io/x/host/v3"
 )
 
-func main() {
+func run() error {
 	// Make sure periph is initialized.
 	if _, err := host.Init(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// Open default I²C bus.
 	bus, err := i2creg.Open("")
 	if err != nil {
-		log.Fatalf("failed to open I²C: %v", err)
+		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 
 	// Create a new TLV493D hall effect sensor.
 	tlv, err := tlv493d.New(bus, &tlv493d.DefaultOpts)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
-	defer tlv.Halt()
+	defer func() {
+		if closeErr := tlv.Halt(); closeErr != nil {
+			log.Printf("Halt tlv: %v", closeErr)
+		}
+	}()
 
 	// Read a single value.
 	if err = tlv.SetMode(tlv493d.LowPowerMode); err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	fmt.Println("Single reading")
 	reading, err := tlv.Read(tlv493d.HighPrecisionWithTemperature)
 
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
 	fmt.Println(reading)
@@ -52,10 +60,17 @@ func main() {
 	fmt.Println("Continuous reading")
 	c, err := tlv.ReadContinuous(100*physic.Hertz, tlv493d.LowPrecision)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
 	for reading := range c {
 		fmt.Println(reading)
+	}
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
 	}
 }

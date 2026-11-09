@@ -5,7 +5,6 @@
 // Reject unknown JSON fields with the Go 1.10 decoder API.
 
 //go:build go1.10
-// +build go1.10
 
 package main
 

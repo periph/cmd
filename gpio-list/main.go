@@ -22,7 +22,7 @@ import (
 )
 
 func printAliases(invalid bool) {
-	max := 0
+	width := 0
 	aliases := gpioreg.Aliases()
 	names := make([]string, 0, len(aliases))
 	m := make(map[string]gpio.PinIO, len(aliases))
@@ -30,8 +30,8 @@ func printAliases(invalid bool) {
 		n := p.Name()
 		names = append(names, n)
 		m[n] = p
-		if l := len(n); l > max {
-			max = l
+		if l := len(n); l > width {
+			width = l
 		}
 	}
 	sort.Strings(names)
@@ -41,7 +41,7 @@ func printAliases(invalid bool) {
 			p = r.Real()
 		}
 		if invalid || p.String() != "INVALID" {
-			fmt.Printf("%-*s: %s\n", max, name, p)
+			fmt.Printf("%-*s: %s\n", width, name, p)
 		}
 	}
 }

@@ -290,7 +290,7 @@ var palette = []color.NRGBA{
 func reduce(src *image14bit.Gray14) *image.NRGBA {
 	midPoint := image14bit.Intensity14(8192)
 	base := midPoint - image14bit.Intensity14(len(palette)/2)
-	max := base + image14bit.Intensity14(len(palette)) - 1
+	maxIntensity := base + image14bit.Intensity14(len(palette)) - 1
 	b := src.Bounds()
 	dst := image.NewNRGBA(b)
 	for y := b.Min.Y; y < b.Max.Y; y++ {
@@ -298,8 +298,8 @@ func reduce(src *image14bit.Gray14) *image.NRGBA {
 			v := src.Intensity14At(x, y)
 			if v < base {
 				v = base
-			} else if v > max {
-				v = max
+			} else if v > maxIntensity {
+				v = maxIntensity
 			}
 			dst.SetNRGBA(x, y, palette[v-base])
 		}
@@ -379,7 +379,11 @@ func grabFrame(dev *lepton.Dev, path string, meta bool) error {
 		return err
 	}
 	/* #nosec G307 */
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("Close f: %v", closeErr)
+		}
+	}()
 	return png.Encode(f, reduce(frame.Gray14))
 }
 
@@ -419,7 +423,11 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
-	defer spiPort.Close()
+	defer func() {
+		if closeErr := spiPort.Close(); closeErr != nil {
+			log.Printf("Close spiPort: %v", closeErr)
+		}
+	}()
 	if spiHz != 0 {
 		if err = spiPort.LimitSpeed(spiHz); err != nil {
 			return err
@@ -430,7 +438,11 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
-	defer i2cBus.Close()
+	defer func() {
+		if closeErr := i2cBus.Close(); closeErr != nil {
+			log.Printf("Close i2cBus: %v", closeErr)
+		}
+	}()
 	if i2cHz != 0 {
 		if err = i2cBus.SetSpeed(i2cHz); err != nil {
 			return err
@@ -438,7 +450,7 @@ func mainImpl() error {
 	}
 	dev, err := lepton.New(spiPort, i2cBus)
 	if err != nil {
-		return fmt.Errorf("%s\nIf testing without hardware, use -fake to simulate a camera", err)
+		return fmt.Errorf("%w\nIf testing without hardware, use -fake to simulate a camera", err)
 	}
 
 	// Action.

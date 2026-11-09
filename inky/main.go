@@ -39,7 +39,11 @@ func mainImpl() error {
 		return err
 	}
 	/* #nosec G307 */
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("Close f: %v", closeErr)
+		}
+	}()
 
 	img, err := png.Decode(f)
 	if err != nil {

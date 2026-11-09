@@ -15,11 +15,12 @@ import (
 )
 
 func TestContent(t *testing.T) {
+	t.Parallel()
 	actual, err := ioutil.ReadFile("static_prod.go")
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := exec.Command("go", "run", "internal/static_gen.go")
+	c := exec.CommandContext(t.Context(), "go", "run", "internal/static_gen.go")
 	c.Stderr = os.Stderr
 	expected, err := c.Output()
 	if err != nil {

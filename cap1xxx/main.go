@@ -54,9 +54,13 @@ func mainImpl() error {
 	var dev *cap1xxx.Dev
 	i2cBus, err := i2creg.Open(*i2cID)
 	if err != nil {
-		return fmt.Errorf("couldn't open the i2c bus - %s", err)
+		return fmt.Errorf("couldn't open the i2c bus - %w", err)
 	}
-	defer i2cBus.Close()
+	defer func() {
+		if closeErr := i2cBus.Close(); closeErr != nil {
+			log.Printf("Close i2cBus: %v", closeErr)
+		}
+	}()
 	if p, ok := i2cBus.(i2c.Pins); ok {
 		printPin("SCL", p.SCL())
 		printPin("SDA", p.SDA())
@@ -64,7 +68,7 @@ func mainImpl() error {
 
 	if hz != 0 {
 		if err = i2cBus.SetSpeed(hz); err != nil {
-			return fmt.Errorf("couldn't set the i2c bus speed - %s", err)
+			return fmt.Errorf("couldn't set the i2c bus speed - %w", err)
 		}
 	}
 	// The alert pin is the pin connected to the IRQ/interrupt pin and indicates
@@ -89,7 +93,7 @@ func mainImpl() error {
 	}
 
 	if dev, err = cap1xxx.NewI2C(i2cBus, &opts); err != nil {
-		return fmt.Errorf("couldn't open cap1xxx - %s", err)
+		return fmt.Errorf("couldn't open cap1xxx - %w", err)
 	}
 
 	userAskedToLinkLEDs := opts.LinkedLEDs
@@ -97,7 +101,7 @@ func mainImpl() error {
 	if err = dev.LinkLEDs(false); err != nil {
 		log.Printf("Failed to unlink leds: %v", err)
 	}
-	for i := 0; i < 8; i++ {
+	for i := range 8 {
 		if err = dev.SetLED(i, true); err != nil {
 			return err
 		}

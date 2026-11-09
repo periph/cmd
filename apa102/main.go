@@ -38,7 +38,7 @@ func findFile(name string) string {
 	if access(name) {
 		return name
 	}
-	for _, p := range strings.Split(os.Getenv("GOPATH"), ":") {
+	for p := range strings.SplitSeq(os.Getenv("GOPATH"), ":") {
 		if len(p) != 0 {
 			if p2 := filepath.Join(p, "src/periph.io/x/cmd/apa102", name); access(p2) {
 				return p2
@@ -60,7 +60,11 @@ func loadImg(name string) (image.Image, error) {
 		return nil, err
 	}
 	/* #nosec G307 */
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("Close f: %v", closeErr)
+		}
+	}()
 
 	img, _, err := image.Decode(f)
 	if err != nil {
@@ -77,9 +81,9 @@ func loadImg(name string) (image.Image, error) {
 func resize(src image.Image, width, height int) *image.NRGBA {
 	srcMax := src.Bounds().Max
 	dst := image.NewNRGBA(image.Rect(0, 0, width, height))
-	for y := 0; y < height; y++ {
+	for y := range height {
 		sY := (y*srcMax.Y + height/2) / height
-		for x := 0; x < width; x++ {
+		for x := range width {
 			dst.Set(x, y, src.At((x*srcMax.X+width/2)/width, sY))
 		}
 	}
@@ -152,7 +156,11 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
-	defer s.Close()
+	defer func() {
+		if closeErr := s.Close(); closeErr != nil {
+			log.Printf("Close s: %v", closeErr)
+		}
+	}()
 	if hz != 0 {
 		if err = s.LimitSpeed(hz); err != nil {
 			return err

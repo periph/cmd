@@ -60,9 +60,13 @@ func (s *SmokeTest) Run(f *flag.FlagSet, args []string) error {
 	// Open the bus.
 	i2cBus, err := i2creg.Open(*i2cID)
 	if err != nil {
-		return fmt.Errorf("error opening %s: %v", *i2cID, err)
+		return fmt.Errorf("error opening %s: %w", *i2cID, err)
 	}
-	defer i2cBus.Close()
+	defer func() {
+		if closeErr := i2cBus.Close(); closeErr != nil {
+			log.Printf("Close i2cBus: %v", closeErr)
+		}
+	}()
 
 	// Open the WC pin.
 	var wcPin gpio.PinIO
@@ -97,13 +101,13 @@ func (s *SmokeTest) ds248x(bus i2c.Bus) error {
 
 	// Issue a reset command.
 	if err := d.Tx([]byte{cmdReset}, nil); err != nil {
-		return fmt.Errorf("ds248x: error while resetting: %s", err)
+		return fmt.Errorf("ds248x: error while resetting: %w", err)
 	}
 
 	// Read the status register to confirm that we have a responding ds248x
 	var stat [1]byte
 	if err := d.Tx([]byte{cmdSetReadPtr, regStatus}, stat[:]); err != nil {
-		return fmt.Errorf("ds248x: error while reading status register: %s", err)
+		return fmt.Errorf("ds248x: error while reading status register: %w", err)
 	}
 	if stat[0] != 0x18 {
 		return fmt.Errorf("ds248x: invalid status register value: %#x, expected 0x18", stat[0])
@@ -138,13 +142,13 @@ func (s *SmokeTest) eeprom(bus i2c.Bus, wcPin gpio.PinIO) error {
 
 	// Read byte 0x12 of the EEPROM and expect to get something.
 	if _, err := d.ReadUint8(0x12); err != nil {
-		return fmt.Errorf("eeprom: error on the first read access")
+		return errors.New("eeprom: error on the first read access")
 	}
 
 	// Read page 5 of the EEPROM and expect to get something.
 	var onePage [16]byte
 	if err := d.ReadStruct(5*16, onePage[:]); err != nil {
-		return fmt.Errorf("eeprom: error reading page 5")
+		return errors.New("eeprom: error reading page 5")
 	}
 
 	// Stop here if we don't have write-control for the chip.
@@ -155,7 +159,7 @@ func (s *SmokeTest) eeprom(bus i2c.Bus, wcPin gpio.PinIO) error {
 
 	// Enable write-control
 	if err := wcPin.Out(gpio.Low); err != nil {
-		return fmt.Errorf("eeprom: cannot init WC control pin: %v", err)
+		return fmt.Errorf("eeprom: cannot init WC control pin: %w", err)
 	}
 	time.Sleep(time.Millisecond)
 	if err := wcPin.Out(gpio.High); err != nil {
@@ -175,7 +179,7 @@ func (s *SmokeTest) eeprom(bus i2c.Bus, wcPin gpio.PinIO) error {
 	for _, v := range values {
 		// Write byte.
 		if err := d.WriteUint8(addr, v); err != nil {
-			return fmt.Errorf("eeprom: error writing %#x to byte at %#x: %v", v, addr, err)
+			return fmt.Errorf("eeprom: error writing %#x to byte at %#x: %w", v, addr, err)
 		}
 		// Read byte back once the device is ready (takes several ms for the write
 		// to complete).
@@ -201,15 +205,15 @@ func (s *SmokeTest) eeprom(bus i2c.Bus, wcPin gpio.PinIO) error {
 	log.Printf("%s: writing&reading EEPROM page %#x", s, addr)
 	// val calculates the value for byte i.
 	val := func(i int) byte { return byte((i<<4)|(16-i)) ^ r }
-	for i := 0; i < 16; i++ {
+	for i := range 16 {
 		onePage[i] = val(i)
 	}
 	// Write page.
 	if err := d.WriteStruct(addr, onePage[:]); err != nil {
-		return fmt.Errorf("eeprom: error writing to page %#x: %v", addr, err)
+		return fmt.Errorf("eeprom: error writing to page %#x: %w", addr, err)
 	}
 	// Clear the buffer to prep for reading back.
-	for i := 0; i < 16; i++ {
+	for i := range 16 {
 		onePage[i] = 0
 	}
 	// Read page back once the device is ready (takes several ms for the write to complete).
@@ -219,12 +223,11 @@ func (s *SmokeTest) eeprom(bus i2c.Bus, wcPin gpio.PinIO) error {
 		}
 	}
 	// Ensure we got the correct data.
-	for i := 0; i < 16; i++ {
+	for i := range 16 {
 		if onePage[i] != val(i) {
 			return fmt.Errorf("eeprom: incorrect read of addr %#x: expected %#x got %#x",
 				addr+byte(i), val(i), onePage[i])
 		}
-
 	}
 
 	// Disable write-control, attempt a write, and expect to get an i2c error.

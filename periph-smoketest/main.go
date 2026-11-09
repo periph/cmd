@@ -86,12 +86,12 @@ func usage(fs *flag.FlagSet) {
 func mainImpl() error {
 	state, err := host.Init()
 	if err != nil {
-		return fmt.Errorf("error loading drivers: %v", err)
+		return fmt.Errorf("error loading drivers: %w", err)
 	}
 	fs := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 	verbose := fs.Bool("v", false, "verbose mode")
 	fs.Usage = func() { usage(fs) }
-	if err = fs.Parse(os.Args[1:]); err == flag.ErrHelp {
+	if err = fs.Parse(os.Args[1:]); errors.Is(err, flag.ErrHelp) {
 		return nil
 	} else if err != nil {
 		return err

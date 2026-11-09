@@ -59,14 +59,18 @@ func (s *SmokeTest) Run(f *flag.FlagSet, args []string) error {
 	// Open the i2c bus where the DS2483 is located.
 	i2cBus, err := i2creg.Open(*busName)
 	if err != nil {
-		return fmt.Errorf("cannot open I²C bus %s: %v", *busName, err)
+		return fmt.Errorf("cannot open I²C bus %s: %w", *busName, err)
 	}
-	defer i2cBus.Close()
+	defer func() {
+		if closeErr := i2cBus.Close(); closeErr != nil {
+			log.Printf("Close i2cBus: %v", closeErr)
+		}
+	}()
 
 	// Open the ds2483 one-wire interface chip.
 	onewireBus, err := ds248x.New(i2cBus, 0x18, &ds248x.DefaultOpts)
 	if err != nil {
-		return fmt.Errorf("cannot open DS248x: %v", err)
+		return fmt.Errorf("cannot open DS248x: %w", err)
 	}
 
 	// Init rand.
@@ -92,7 +96,7 @@ func (s *SmokeTest) Run(f *flag.FlagSet, args []string) error {
 func (s *SmokeTest) search(bus onewire.Bus) ([]onewire.Address, error) {
 	addrs, err := bus.Search(false)
 	if err != nil {
-		return nil, fmt.Errorf("search failed: %v", err)
+		return nil, fmt.Errorf("search failed: %w", err)
 	}
 
 	if len(addrs) != 2 {
@@ -153,12 +157,12 @@ func (s *SmokeTest) eeprom(bus onewire.Bus, addr onewire.Address) error {
 	buf[0] = 0x0f    // write scratchpad
 	copy(buf[3:11], data[:])
 	if err := d.Tx(buf[:], nil); err != nil {
-		return fmt.Errorf("eeprom: error on the first scratchpad write")
+		return errors.New("eeprom: error on the first scratchpad write")
 	}
 
 	// Read the scratchpad back
 	if err := d.Tx([]byte{0xaa}, buf[:]); err != nil {
-		return fmt.Errorf("eeprom: error reading the scratchpad")
+		return errors.New("eeprom: error reading the scratchpad")
 	}
 	for i := range data {
 		if data[i] != buf[i+3] {

@@ -44,7 +44,7 @@ func findFile(name string) string {
 	if access(name) {
 		return name
 	}
-	for _, p := range strings.Split(os.Getenv("GOPATH"), ":") {
+	for p := range strings.SplitSeq(os.Getenv("GOPATH"), ":") {
 		if len(p) != 0 {
 			// Use the images from cmd/apa102.
 			if p2 := filepath.Join(p, "src/periph.io/x/cmd/apa102", name); access(p2) {
@@ -67,7 +67,11 @@ func loadImg(name string) (image.Image, error) {
 		return nil, err
 	}
 	/* #nosec G307 */
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("Close f: %v", closeErr)
+		}
+	}()
 
 	img, _, err := image.Decode(f)
 	if err != nil {
@@ -84,9 +88,9 @@ func loadImg(name string) (image.Image, error) {
 func resize(src image.Image, width, height int) *image.NRGBA {
 	srcMax := src.Bounds().Max
 	dst := image.NewNRGBA(image.Rect(0, 0, width, height))
-	for y := 0; y < height; y++ {
+	for y := range height {
 		sY := (y*srcMax.Y + height/2) / height
-		for x := 0; x < width; x++ {
+		for x := range width {
 			dst.Set(x, y, src.At((x*srcMax.X+width/2)/width, sY))
 		}
 	}
@@ -125,7 +129,7 @@ func mainImpl() error {
 	verbose := flag.Bool("v", false, "verbose mode")
 	pin := flag.String("p", "", "GPIO pin to use")
 	spiID := flag.String("spi", "", "Use SPI MOSI implemntation")
-	clear := flag.Bool("clear", false, "Blank the lights on exit")
+	clearOnExit := flag.Bool("clear", false, "Blank the lights on exit")
 	numPixels := flag.Int("n", nrzled.DefaultOpts.NumPixels, "number of pixels on the strip")
 	hz := nrzled.DefaultOpts.Freq
 	flag.Var(&hz, "s", "speed in Hz")
@@ -154,7 +158,11 @@ func mainImpl() error {
 			if s, err = spireg.Open(*spiID); err != nil {
 				return err
 			}
-			defer s.Close()
+			defer func() {
+				if closeErr := s.Close(); closeErr != nil {
+					log.Printf("Close s: %v", closeErr)
+				}
+			}()
 
 			if p, ok := s.(spi.Pins); ok {
 				log.Printf("Using pins CLK: %s  MOSI: %s  MISO: %s", p.CLK(), p.MOSI(), p.MISO())
@@ -189,8 +197,12 @@ func mainImpl() error {
 			}
 		}
 	}
-	if *clear {
-		defer disp.Halt()
+	if *clearOnExit {
+		defer func() {
+			if closeErr := disp.Halt(); closeErr != nil {
+				log.Printf("Halt disp: %v", closeErr)
+			}
+		}()
 	}
 	// Open the display device.
 

@@ -45,7 +45,7 @@ func findFile(name string) string {
 	if access(name) {
 		return name
 	}
-	for _, p := range strings.Split(os.Getenv("GOPATH"), ":") {
+	for p := range strings.SplitSeq(os.Getenv("GOPATH"), ":") {
 		if len(p) != 0 {
 			if p2 := filepath.Join(p, "src/periph.io/x/cmd/ssd1306", name); access(p2) {
 				return p2
@@ -67,7 +67,11 @@ func loadImg(name string) (image.Image, *gif.GIF, error) {
 		return nil, nil, err
 	}
 	/* #nosec G307 */
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("Close f: %v", closeErr)
+		}
+	}()
 
 	// Try to decode as an animated GIF first, then fall back to generic decoding.
 	var g *gif.GIF
@@ -97,9 +101,9 @@ func loadImg(name string) (image.Image, *gif.GIF, error) {
 func resize(src image.Image, size image.Point) *image.NRGBA {
 	srcMax := src.Bounds().Max
 	dst := image.NewNRGBA(image.Rectangle{Max: size})
-	for y := 0; y < size.Y; y++ {
+	for y := range size.Y {
 		sY := (y*srcMax.Y + size.Y/2) / size.Y
-		for x := 0; x < size.X; x++ {
+		for x := range size.X {
 			dst.Set(x, y, src.At((x*srcMax.X+size.X/2)/size.X, sY))
 		}
 	}
@@ -169,7 +173,11 @@ func mainImpl() error {
 		if err != nil {
 			return err
 		}
-		defer c.Close()
+		defer func() {
+			if closeErr := c.Close(); closeErr != nil {
+				log.Printf("Close c: %v", closeErr)
+			}
+		}()
 		if hz != 0 {
 			if err = c.LimitSpeed(hz); err != nil {
 				return err
@@ -192,7 +200,11 @@ func mainImpl() error {
 		if err != nil {
 			return err
 		}
-		defer c.Close()
+		defer func() {
+			if closeErr := c.Close(); closeErr != nil {
+				log.Printf("Close c: %v", closeErr)
+			}
+		}()
 		if hz != 0 {
 			if err = c.SetSpeed(hz); err != nil {
 				return err

@@ -6,6 +6,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -35,10 +36,10 @@ func mainImpl() error {
 	}
 
 	if *clkPin == "" {
-		return fmt.Errorf("-clk is required")
+		return errors.New("-clk is required")
 	}
 	if *dataPin == "" {
-		return fmt.Errorf("-data is required")
+		return errors.New("-data is required")
 	}
 
 	clkPinReg := gpioreg.ByName(*clkPin)

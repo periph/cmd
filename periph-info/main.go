@@ -22,14 +22,14 @@ func printDrivers(drivers []driverreg.DriverFailure) {
 		fmt.Print("  <none>\n")
 		return
 	}
-	max := 0
+	width := 0
 	for _, f := range drivers {
-		if m := len(f.D.String()); m > max {
-			max = m
+		if m := len(f.D.String()); m > width {
+			width = m
 		}
 	}
 	for _, f := range drivers {
-		fmt.Printf("- %-*s: %v\n", max, f.D, f.Err)
+		fmt.Printf("- %-*s: %v\n", width, f.D, f.Err)
 	}
 }
 
@@ -53,10 +53,10 @@ func mainImpl() error {
 	if len(state.Loaded) == 0 {
 		fmt.Print("  <none>\n")
 	} else {
-		max := 0
+		width := 0
 		for _, d := range state.Loaded {
-			if m := len(d.String()); m > max {
-				max = m
+			if m := len(d.String()); m > width {
+				width = m
 			}
 		}
 		for _, d := range state.Loaded {
@@ -66,7 +66,7 @@ func mainImpl() error {
 				fmt.Printf("- %s\n", d)
 				continue
 			}
-			fmt.Printf("- %-*s:", max, d)
+			fmt.Printf("- %-*s:", width, d)
 			if len(p) != 0 {
 				fmt.Printf(" %s", p)
 			}

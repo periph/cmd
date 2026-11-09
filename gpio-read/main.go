@@ -38,7 +38,7 @@ func mainImpl() error {
 	}
 	log.SetFlags(log.Lmicroseconds)
 
-	//pull := gpio.PullNoChange
+	// pull := gpio.PullNoChange
 	pull := gpio.Float
 	if *pullUp {
 		if *pullDown {
@@ -73,7 +73,7 @@ func mainImpl() error {
 			p.WaitForEdge(-1)
 			if err := printLevel(p.Read()); err != nil {
 				// Do not return an error on pipe fail, just exit.
-				return nil
+				return nil //nolint:nilerr // Output errors intentionally end edge monitoring successfully.
 			}
 		}
 	}

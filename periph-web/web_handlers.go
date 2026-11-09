@@ -26,14 +26,14 @@ func (s *webServer) getRoot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}
-	if r.Method != "GET" && r.Method != "HEAD" {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
 		http.Error(w, "Only GET is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	s.setXSRFCookie(r.RemoteAddr, w)
 	content := getContent("static/index.html")
 	if content == nil {
-		http.Error(w, "Content missing", 500)
+		http.Error(w, "Content missing", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "text/html")
@@ -41,11 +41,11 @@ func (s *webServer) getRoot(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(content)
 }
 
-// /favicon.ico
-func (s *webServer) getFavicon(w http.ResponseWriter, r *http.Request) {
+// /favicon.ico.
+func (s *webServer) getFavicon(w http.ResponseWriter, _ *http.Request) {
 	content := getContent("static/favicon.ico")
 	if content == nil {
-		http.Error(w, "Content missing", 500)
+		http.Error(w, "Content missing", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "image/png")
@@ -55,9 +55,9 @@ func (s *webServer) getFavicon(w http.ResponseWriter, r *http.Request) {
 
 // Other handlers
 
-// /raw/periph/v1/xsrf_token
+// /raw/periph/v1/xsrf_token.
 func (s *webServer) apiXSRFTokenHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
+	if r.Method != http.MethodPost {
 		http.Error(w, "Only POST is allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -65,6 +65,6 @@ func (s *webServer) apiXSRFTokenHandler(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Cache-Control", cacheControlNone)
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(t))
 }

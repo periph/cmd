@@ -78,7 +78,11 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 
 	if hz != 0 {
 		if err = bus.SetSpeed(hz); err != nil {

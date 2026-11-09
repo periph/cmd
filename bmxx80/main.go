@@ -96,34 +96,36 @@ func mainImpl() error {
 	}
 
 	s := bmxx80.O4x
-	if *sample1x {
+	switch {
+	case *sample1x:
 		s = bmxx80.O1x
-	} else if *sample2x {
+	case *sample2x:
 		s = bmxx80.O2x
-	} else if *sample4x {
+	case *sample4x:
 		s = bmxx80.O4x
-	} else if *sample8x {
+	case *sample8x:
 		s = bmxx80.O8x
-	} else if *sample16x {
+	case *sample16x:
 		s = bmxx80.O16x
 	}
 	opts := bmxx80.Opts{Temperature: s, Pressure: s, Humidity: s}
-	if *filter2x {
+	switch {
+	case *filter2x:
 		if *interval == 0 {
 			return errors.New("-f2 only makes sense with -i")
 		}
 		opts.Filter = bmxx80.F2
-	} else if *filter4x {
+	case *filter4x:
 		if *interval == 0 {
 			return errors.New("-f4 only makes sense with -i")
 		}
 		opts.Filter = bmxx80.F4
-	} else if *filter8x {
+	case *filter8x:
 		if *interval == 0 {
 			return errors.New("-f8 only makes sense with -i")
 		}
 		opts.Filter = bmxx80.F8
-	} else if *filter16x {
+	case *filter16x:
 		if *interval == 0 {
 			return errors.New("-f16 only makes sense with -i")
 		}
@@ -140,7 +142,11 @@ func mainImpl() error {
 		if err != nil {
 			return err
 		}
-		defer s.Close()
+		defer func() {
+			if closeErr := s.Close(); closeErr != nil {
+				log.Printf("Close s: %v", closeErr)
+			}
+		}()
 		if p, ok := s.(spi.Pins); ok {
 			printPin("CLK", p.CLK())
 			printPin("MOSI", p.MOSI())
@@ -160,7 +166,11 @@ func mainImpl() error {
 		if err != nil {
 			return err
 		}
-		defer i.Close()
+		defer func() {
+			if closeErr := i.Close(); closeErr != nil {
+				log.Printf("Close i: %v", closeErr)
+			}
+		}()
 		if p, ok := i.(i2c.Pins); ok {
 			printPin("SCL", p.SCL())
 			printPin("SDA", p.SDA())

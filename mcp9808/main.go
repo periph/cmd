@@ -8,6 +8,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -35,14 +36,18 @@ func mainImpl() error {
 	// Open default I²C bus.
 	bus, err := i2creg.Open(*i2cbus)
 	if err != nil {
-		return fmt.Errorf("failed to open I²C: %v", err)
+		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 
 	// Create a new temperature sensor a sense with default options.
 	sensor, err := mcp9808.New(bus, &mcp9808.Opts{Addr: *address})
 	if err != nil {
-		return fmt.Errorf("failed to open new sensor: %v", err)
+		return fmt.Errorf("failed to open new sensor: %w", err)
 	}
 
 	// Read values from sensor every second.
@@ -57,7 +62,7 @@ func mainImpl() error {
 		case <-everySecond:
 			t, err := sensor.SenseTemp()
 			if err != nil {
-				return fmt.Errorf("sensor reading error: %v", err)
+				return fmt.Errorf("sensor reading error: %w", err)
 			}
 			fmt.Println(t)
 		case <-halt:

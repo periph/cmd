@@ -8,6 +8,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"periph.io/x/conn/v3/i2c/i2creg"
@@ -28,15 +29,19 @@ func mainImpl() error {
 	// Open default I²C bus.
 	bus, err := i2creg.Open(*i2cbus)
 	if err != nil {
-		return fmt.Errorf("failed to open I²C: %v", err)
+		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 
 	// Creates a multiplexer with 8 ports at address 0x70 if no other address
 	// supplied with command line option.
 	mux, err := pca9548.New(bus, &pca9548.Opts{Addr: *address})
 	if err != nil {
-		return fmt.Errorf("failed to load new mux: %v", err)
+		return fmt.Errorf("failed to load new mux: %w", err)
 	}
 
 	portNames, err := mux.RegisterPorts("mux")
@@ -49,7 +54,7 @@ func mainImpl() error {
 	fmt.Println("Starting Scan")
 
 	// Loop through each bus scanning all addresses for a response.
-	for i := 0; i < len(portNames); i++ {
+	for i := range portNames {
 		// Open multiplexer port
 		m, err := i2creg.Open(portNames[i])
 		if err != nil {

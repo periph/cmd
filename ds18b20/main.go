@@ -12,6 +12,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"periph.io/x/conn/v3/onewire"
@@ -20,7 +21,7 @@ import (
 	"periph.io/x/host/v3"
 )
 
-// For the Dallas onewire devices, the conversion time is dependent on the
+// DefaultBits controls Dallas onewire device conversion time according to the
 // resolution. Refer to the Datasheet for more information.
 const DefaultBits = 10
 
@@ -63,7 +64,7 @@ func main() {
 			fmt.Println(" Open error:", err)
 			continue
 		}
-		bus := busCloser.(onewire.Bus)
+		bus := busCloser
 		newSensors := enumerateBusForSensors(bus)
 		if len(newSensors) > 0 {
 			// Do an initial convert on all devices on the bus.
@@ -87,16 +88,17 @@ func main() {
 	// the conversion latency.
 	for {
 		out := fmt.Sprintf("%d ", time.Now().Unix())
+		var outSb90 strings.Builder
 		for _, dev := range sensors {
 			t, err := dev.LastTemp()
 			if err == nil {
-				out += fmt.Sprintf("%.2f ", t.Celsius())
+				outSb90.WriteString(fmt.Sprintf("%.2f ", t.Celsius()))
 			} else {
 				log.Print(err)
-				out += "err "
+				outSb90.WriteString("err ")
 			}
-
 		}
+		out += outSb90.String()
 		fmt.Println(out)
 
 		for _, bus := range buses {

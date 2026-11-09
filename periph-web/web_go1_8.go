@@ -5,7 +5,6 @@
 // Gracefully shut down the HTTP server using the Go 1.8 API.
 
 //go:build go1.8
-// +build go1.8
 
 package main
 

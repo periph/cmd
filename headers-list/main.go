@@ -23,14 +23,14 @@ import (
 )
 
 func printFailures(state *driverreg.State) {
-	max := 0
+	width := 0
 	for _, f := range state.Failed {
-		if m := len(f.D.String()); m > max {
-			max = m
+		if m := len(f.D.String()); m > width {
+			width = m
 		}
 	}
 	for _, f := range state.Failed {
-		fmt.Fprintf(os.Stderr, "- %-*s: %v\n", max, f.D, f.Err)
+		fmt.Fprintf(os.Stderr, "- %-*s: %v\n", width, f.D, f.Err)
 	}
 }
 
@@ -104,7 +104,7 @@ func printHardware(showFunctions bool, all map[string][][]pin.Pin) {
 			// Two lines.
 			if showFunctions {
 				// Super wide format.
-				fmt.Printf("  %*s  %*s  %*s  Pos  Pos  %-*s  %-*s  %-*s\n",
+				fmt.Printf("  %*s  %*s  %*s  Pos  %-*s  %-*s  %-*s\n",
 					maxAltFn, "Alt", maxFn, "Func", maxName, "Name",
 					maxName, "Name", maxFn, "Func", maxAltFn, "Alt")
 				for i, line := range header {
@@ -114,7 +114,7 @@ func printHardware(showFunctions bool, all map[string][][]pin.Pin) {
 				}
 				continue
 			}
-			fmt.Printf("  %*s  %*s  Pos  Pos  %-*s  %-*s\n", maxFn, "Func", maxName, "Name", maxName, "Name", maxFn, "Func")
+			fmt.Printf("  %*s  %*s  Pos  %-*s  %-*s\n", maxFn, "Func", maxName, "Name", maxName, "Name", maxFn, "Func")
 			for i, line := range header {
 				fmt.Printf("  %*s  %*s  %3d  %-3d  %-*s  %-*s\n",
 					maxFn, line[0].Function(), maxName, line[0], 2*i+1, 2*i+2, maxName, line[1], maxFn, line[1].Function())

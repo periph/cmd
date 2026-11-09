@@ -18,10 +18,11 @@ import (
 func loggingHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		received := time.Now()
-		rwh := responseWriteHijacker{responseWriter: responseWriter{ResponseWriter: w}}
-		w = &rwh
+		rwh := responseWriteHijacker{ResponseWriter: w}
 		// Not all ResponseWriter implement Hijack, so query its support upfront.
-		if _, ok := w.(http.Hijacker); !ok {
+		if _, ok := w.(http.Hijacker); ok {
+			w = &rwh
+		} else {
 			w = &rwh.responseWriter
 		}
 		defer func() {
@@ -37,6 +38,7 @@ func loggingHandler(h http.Handler) http.Handler {
 
 type responseWriter struct {
 	http.ResponseWriter
+
 	length int
 	status int
 }
@@ -57,13 +59,18 @@ func (r *responseWriter) WriteHeader(status int) {
 
 type responseWriteHijacker struct {
 	responseWriter
+
 	hijacked bool
 }
 
 // Hijack is needed for websocket.
 func (r *responseWriteHijacker) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	hijacker, ok := r.ResponseWriter.(http.Hijacker)
+	if !ok {
+		return nil, nil, http.ErrNotSupported
+	}
 	r.hijacked = true
-	return r.ResponseWriter.(http.Hijacker).Hijack()
+	return hijacker.Hijack()
 }
 
 //
@@ -74,7 +81,7 @@ func roundDuration(d time.Duration) time.Duration {
 		for i := uint(3); i < l; i++ {
 			m *= 10
 		}
-		d = (d + (m / 2)) / m * m
+		d = time.Duration(int64((d+m/2)/m) * int64(m))
 	}
 	return d
 }

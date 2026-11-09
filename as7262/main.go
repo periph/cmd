@@ -8,6 +8,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -20,7 +21,6 @@ import (
 )
 
 func mainImpl() error {
-
 	i2cbus := flag.String("bus", "", "I²C bus (/dev/i2c-1)")
 
 	flag.Parse()
@@ -33,19 +33,27 @@ func mainImpl() error {
 	// Open I²C bus.
 	bus, err := i2creg.Open(*i2cbus)
 	if err != nil {
-		return fmt.Errorf("failed to open I²C: %v", err)
+		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer bus.Close()
+	defer func() {
+		if closeErr := bus.Close(); closeErr != nil {
+			log.Printf("Close bus: %v", closeErr)
+		}
+	}()
 
 	// Create a spectrum sensor.
 	sensor, err := as7262.New(bus, &as7262.Opts{Gain: as7262.G16x})
 	if err != nil {
-		return fmt.Errorf("failed to open new sensor: %v", err)
+		return fmt.Errorf("failed to open new sensor: %w", err)
 	}
 
 	// Create a ticker to read values from sensor every second.
 	everySecond := time.NewTicker(time.Second).C
-	defer sensor.Halt()
+	defer func() {
+		if closeErr := sensor.Halt(); closeErr != nil {
+			log.Printf("Halt sensor: %v", closeErr)
+		}
+	}()
 
 	fmt.Println("ctrl+c to quit")
 	var halt = make(chan os.Signal, 1)
@@ -59,7 +67,7 @@ func mainImpl() error {
 		case <-everySecond:
 			spectrum, err := sensor.Sense(12500*physic.MicroAmpere, senseTime)
 			if err != nil {
-				return fmt.Errorf("sensor reading error: %v", err)
+				return fmt.Errorf("sensor reading error: %w", err)
 			}
 			fmt.Println(spectrum)
 		case <-halt:

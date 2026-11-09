@@ -33,7 +33,7 @@ const cacheControlNone = "Cache-Control:no-cache,private"
 
 type apiHandler struct {
 	path string
-	fn   interface{}
+	fn   any
 }
 
 type webServer struct {
@@ -46,7 +46,7 @@ type webServer struct {
 func getHostAndPort(hostport string) (string, int, error) {
 	host, portStr, err := net.SplitHostPort(hostport)
 	if err != nil {
-		return "", 0, fmt.Errorf("could not split http address: %v", err)
+		return "", 0, fmt.Errorf("could not split http address: %w", err)
 	}
 	if host == "" {
 		host = "localhost"
@@ -54,7 +54,7 @@ func getHostAndPort(hostport string) (string, int, error) {
 	var port int
 	if portStr != "" {
 		if port, err = strconv.Atoi(portStr); err != nil {
-			return "", 0, fmt.Errorf("invalid port number: %v", err)
+			return "", 0, fmt.Errorf("invalid port number: %w", err)
 		}
 	}
 	return host, port, nil
@@ -83,7 +83,7 @@ func newWebServer(hostport string, state *driverreg.State, verbose bool) (*webSe
 	if err != nil {
 		return nil, err
 	}
-	hostname := ""
+	var hostname string
 	if isLocalhost(host) {
 		hostname = "localhost"
 		s.server.Handler = localOnly(s.server.Handler)
@@ -104,7 +104,7 @@ func newWebServer(hostport string, state *driverreg.State, verbose bool) (*webSe
 	}
 
 	// Start serving.
-	if s.ln, err = net.Listen("tcp", fmt.Sprintf("%s:%d", host, port)); err != nil {
+	if s.ln, err = net.Listen("tcp", fmt.Sprintf("%s:%d", host, port)); err != nil { //nolint:noctx // Startup has no caller context.
 		return nil, err
 	}
 	s.server.Addr = s.ln.Addr().String()
@@ -119,17 +119,17 @@ func newWebServer(hostport string, state *driverreg.State, verbose bool) (*webSe
 func (s *webServer) generateToken(userID string, now time.Time) string {
 	milliTime := (now.UnixNano() + 1e6 - 1) / 1e6
 	h := hmac.New(sha256.New, s.key[:])
-	fmt.Fprintf(h, "%d:%s", milliTime, userID)
+	fmt.Fprintf(h, "%d:%s", milliTime, userID) //nolint:errcheck // hash.Hash.Write never returns an error.
 	return fmt.Sprintf("%x:%s", milliTime, strings.TrimRight(base64.URLEncoding.EncodeToString(h.Sum(nil)), "="))
 }
 
 func (s *webServer) validateToken(token string, userID string) bool {
 	now := time.Now()
-	sep := strings.Index(token, ":")
-	if sep < 0 {
+	before, _, ok := strings.Cut(token, ":")
+	if !ok {
 		return false
 	}
-	millis, err := strconv.ParseInt(token[:sep], 16, 64)
+	millis, err := strconv.ParseInt(before, 16, 64)
 	if err != nil {
 		return false
 	}
@@ -178,13 +178,13 @@ func (s *webServer) enforceXSRF(h http.HandlerFunc) http.HandlerFunc {
 		c, _ := r.Cookie("XSRF-TOKEN")
 		if c == nil {
 			log.Printf("Missing XSRF-TOKEN cookie")
-			http.Error(w, "Missing XSRF-TOKEN cookie", 400)
+			http.Error(w, "Missing XSRF-TOKEN cookie", http.StatusBadRequest)
 			_ = r.Body.Close()
 			return
 		}
 		if !s.validateToken(c.Value, strings.SplitN(r.RemoteAddr, ":", 2)[0]) {
 			log.Printf("Invalid XSRF-TOKEN cookie %q", c.Value)
-			http.Error(w, "Invalid XSRF-TOKEN cookie", 400)
+			http.Error(w, "Invalid XSRF-TOKEN cookie", http.StatusBadRequest)
 			_ = r.Body.Close()
 			return
 		}
@@ -197,7 +197,7 @@ func (s *webServer) enforceXSRF(h http.HandlerFunc) http.HandlerFunc {
 // Also uses noContent().
 func getOnly(h http.HandlerFunc) http.HandlerFunc {
 	return noContent(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "GET" && r.Method != "HEAD" {
+		if r.Method != http.MethodGet && r.Method != http.MethodHead {
 			http.Error(w, "Only GET is allowed", http.StatusMethodNotAllowed)
 			return
 		}
@@ -211,11 +211,11 @@ func noContent(h http.HandlerFunc) http.HandlerFunc {
 		n, err := io.Copy(ioutil.Discard, r.Body)
 		_ = r.Body.Close()
 		if n != 0 {
-			http.Error(w, "Unexpected content", 400)
+			http.Error(w, "Unexpected content", http.StatusBadRequest)
 			return
 		}
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		h(w, r)
@@ -223,7 +223,7 @@ func noContent(h http.HandlerFunc) http.HandlerFunc {
 }
 
 // api wraps a JSON api handler.
-func (s *webServer) api(h interface{}) http.HandlerFunc {
+func (s *webServer) api(h any) http.HandlerFunc {
 	v := reflect.ValueOf(h)
 	t := v.Type()
 	if t.Kind() != reflect.Func {
@@ -242,17 +242,17 @@ func (s *webServer) api(h interface{}) http.HandlerFunc {
 		defer func() {
 			_ = r.Body.Close()
 		}()
-		if r.Method != "POST" {
+		if r.Method != http.MethodPost {
 			http.Error(w, "Only POST is allowed", http.StatusMethodNotAllowed)
 			return
 		}
 		if r.URL.RawQuery != "" {
-			http.Error(w, "Do not use query argment", 400)
+			http.Error(w, "Do not use query argment", http.StatusBadRequest)
 			return
 		}
 		// Ignore suffix "; charset=utf-8" for now.
 		if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
-			http.Error(w, "Content-Type must be application/json", 400)
+			http.Error(w, "Content-Type must be application/json", http.StatusBadRequest)
 			return
 		}
 		d := json.NewDecoder(r.Body)
@@ -262,18 +262,18 @@ func (s *webServer) api(h interface{}) http.HandlerFunc {
 		if inT != nil {
 			inv := reflect.New(inT)
 			if err := d.Decode(inv.Interface()); err != nil {
-				http.Error(w, fmt.Sprintf("Malformed user data: %v", err), 400)
+				http.Error(w, fmt.Sprintf("Malformed user data: %v", err), http.StatusBadRequest)
 				return
 			}
 			in = append(in, inv.Elem())
 		} else {
 			var m map[string]string
 			if err := d.Decode(&m); err != nil {
-				http.Error(w, fmt.Sprintf("Malformed user data: %v", err), 400)
+				http.Error(w, fmt.Sprintf("Malformed user data: %v", err), http.StatusBadRequest)
 				return
 			}
 			if len(m) != 0 {
-				http.Error(w, "Unexpected data", 400)
+				http.Error(w, "Unexpected data", http.StatusBadRequest)
 				return
 			}
 		}
@@ -285,7 +285,7 @@ func (s *webServer) api(h interface{}) http.HandlerFunc {
 		out := v.Call(in)
 		raw, err := json.Marshal(out[0].Interface())
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Malformed response: %v", err), 500)
+			http.Error(w, fmt.Sprintf("Malformed response: %v", err), http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")

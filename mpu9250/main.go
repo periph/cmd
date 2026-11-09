@@ -30,7 +30,6 @@ var (
 )
 
 func main() {
-
 	flag.Parse()
 
 	switch *accRes {
@@ -79,7 +78,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dev.Debug(func(msg string, args ...interface{}) {
+	dev.Debug(func(msg string, args ...any) {
 		fmt.Printf(msg, args...)
 	})
 

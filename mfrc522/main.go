@@ -22,7 +22,6 @@ import (
 )
 
 func mainImpl() error {
-
 	sector := flag.Int("sector", 1, "Sector to access")
 	block := flag.Int("block", 0, "Block to access")
 
@@ -133,9 +132,9 @@ func mainImpl() error {
 			return errors.New("data bytes must contain exactly 16 elements")
 		}
 		for i := range defaultDataBytes {
-			intVal := uint64(0)
-			if intVal, err = strconv.ParseUint(bytesBuffer[i], 10, 8); err != nil {
-				return err
+			intVal, parseErr := strconv.ParseUint(bytesBuffer[i], 10, 8)
+			if parseErr != nil {
+				return parseErr
 			}
 			defaultDataBytes[i] = byte(intVal)
 		}

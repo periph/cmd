@@ -67,7 +67,8 @@ func mainImpl() error {
 		b = tm1637.Off
 	}
 	var segments []byte
-	if *asTime {
+	switch {
+	case *asTime:
 		if flag.NArg() != 2 {
 			return errors.New("provide hh and mm")
 		}
@@ -82,7 +83,7 @@ func mainImpl() error {
 		}
 		minute := int(x)
 		segments = tm1637.Clock(hour, minute, *showDot)
-	} else if *asSeg {
+	case *asSeg:
 		segments = make([]byte, flag.NArg())
 		for i, d := range flag.Args() {
 			x, err := strconv.ParseUint(d, 16, 8)
@@ -91,7 +92,7 @@ func mainImpl() error {
 			}
 			segments[i] = byte(x)
 		}
-	} else {
+	default:
 		digits := make([]int, flag.NArg())
 		for i, d := range flag.Args() {
 			x, err := strconv.ParseUint(d, 16, 8)

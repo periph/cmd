@@ -59,14 +59,18 @@ func (s *SmokeTest) Run(f *flag.FlagSet, args []string) error {
 	// Open the port.
 	spiDev, err := spireg.Open(*spiID)
 	if err != nil {
-		return fmt.Errorf("error opening %s: %v", *spiID, err)
+		return fmt.Errorf("error opening %s: %w", *spiID, err)
 	}
-	defer spiDev.Close()
+	defer func() {
+		if closeErr := spiDev.Close(); closeErr != nil {
+			log.Printf("Close spiDev: %v", closeErr)
+		}
+	}()
 
 	// Set SPI parameters.
 	c, err := spiDev.Connect(4*physic.MegaHertz, spi.Mode0, 8)
 	if err != nil {
-		return fmt.Errorf("error setting SPI parameters: %v", err)
+		return fmt.Errorf("error setting SPI parameters: %w", err)
 	}
 
 	// Open the WC pin.
@@ -111,14 +115,14 @@ func (s *SmokeTest) eeprom(d spi.Conn, wpPin gpio.PinIO) error {
 
 	// Clear write-protect so we can write.
 	if err := wpPin.Out(gpio.High); err != nil {
-		return fmt.Errorf("eeprom: cannot init WP control pin: %s", err)
+		return fmt.Errorf("eeprom: cannot init WP control pin: %w", err)
 	}
 
 	var rBuf [35]byte
 	// Read status register of the EEPROM and expect not to get an error (the device
 	// can't produce an error with SPI, but the driver/OS could act up).
 	if err := d.Tx([]byte{cmdReadStatus, 0}, rBuf[:2]); err != nil {
-		return fmt.Errorf("eeprom: error on the first read status access: %v", err)
+		return fmt.Errorf("eeprom: error on the first read status access: %w", err)
 	}
 
 	// Invert one of the block protect bits and expect to read the modified status reg back.
@@ -187,7 +191,7 @@ func (s *SmokeTest) eeprom(d spi.Conn, wpPin gpio.PinIO) error {
 	// val calculates the value for byte i.
 	val := func(i int) byte { return byte((i<<4)|(16-(i>>1))) ^ r }
 	var onePage [32]byte
-	for i := 0; i < 32; i++ {
+	for i := range 32 {
 		onePage[i] = val(i)
 	}
 	// Write page.
@@ -198,7 +202,7 @@ func (s *SmokeTest) eeprom(d spi.Conn, wpPin gpio.PinIO) error {
 		return err
 	}
 	// Zero buffer in anticipation of read.
-	for i := 0; i < 32; i++ {
+	for i := range 32 {
 		onePage[i] = 0
 	}
 	// Read page back after the chip is ready.
@@ -209,12 +213,11 @@ func (s *SmokeTest) eeprom(d spi.Conn, wpPin gpio.PinIO) error {
 		return err
 	}
 	// Ensure we got the correct data.
-	for i := 0; i < 32; i++ {
+	for i := range 32 {
 		if rBuf[i+3] != val(i) {
 			return fmt.Errorf("eeprom: incorrect read of addr %#x: expected %#x got %#x",
 				addr[1]+byte(i), val(i), rBuf[i+3])
 		}
-
 	}
 
 	// Set write-protect, attempt a write, and expect it not to happen.

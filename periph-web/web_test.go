@@ -15,7 +15,9 @@ import (
 )
 
 func TestWebServer(t *testing.T) {
+	t.Parallel()
 	t.Run("cookie", func(t *testing.T) {
+		t.Parallel()
 		s := &webServer{}
 		w := httptest.NewRecorder()
 		token := s.setXSRFCookie("127.0.0.1:1234", w)
@@ -35,12 +37,14 @@ func TestWebServer(t *testing.T) {
 		}
 	})
 	t.Run("malformed JSON", func(t *testing.T) {
+		t.Parallel()
 		for _, body := range []string{`{"value":`, `{"unexpected":true}`, `{"unexpected":"data"}`, `{}` + `{}`} {
 			t.Run(body, func(t *testing.T) {
+				t.Parallel()
 				s := &webServer{}
 				called := false
-				h := s.api(func(in struct{ Value string }) (string, int) { called = true; return "ok", http.StatusOK })
-				r := httptest.NewRequest(http.MethodPost, "/api", strings.NewReader(body))
+				h := s.api(func(_ struct{ Value string }) (string, int) { called = true; return "ok", http.StatusOK })
+				r := httptest.NewRequestWithContext(t.Context(), http.MethodPost, "/api", strings.NewReader(body))
 				r.RemoteAddr = "127.0.0.1:1234"
 				r.Header.Set("Content-Type", "application/json")
 				r.AddCookie(&http.Cookie{Name: "XSRF-TOKEN", Value: s.generateToken("127.0.0.1", time.Now())})
@@ -55,6 +59,7 @@ func TestWebServer(t *testing.T) {
 }
 
 func TestAPIValidJSON(t *testing.T) {
+	t.Parallel()
 	for _, withArg := range []bool{false, true} {
 		s := &webServer{}
 		called := false
@@ -66,7 +71,7 @@ func TestAPIValidJSON(t *testing.T) {
 		if withArg {
 			body = `{"Value":"ok"}`
 		}
-		r := httptest.NewRequest(http.MethodPost, "/api", strings.NewReader(body+" \n"))
+		r := httptest.NewRequestWithContext(t.Context(), http.MethodPost, "/api", strings.NewReader(body+" \n"))
 		r.RemoteAddr = "127.0.0.1:1234"
 		r.Header.Set("Content-Type", "application/json")
 		r.AddCookie(&http.Cookie{Name: "XSRF-TOKEN", Value: s.generateToken("127.0.0.1", time.Now())})
@@ -79,10 +84,11 @@ func TestAPIValidJSON(t *testing.T) {
 }
 
 func TestAPINoArgsRejectsData(t *testing.T) {
+	t.Parallel()
 	s := &webServer{}
 	called := false
 	h := s.api(func() (string, int) { called = true; return "ok", http.StatusOK })
-	r := httptest.NewRequest(http.MethodPost, "/api", strings.NewReader(`{"unexpected":"data"}`))
+	r := httptest.NewRequestWithContext(t.Context(), http.MethodPost, "/api", strings.NewReader(`{"unexpected":"data"}`))
 	r.RemoteAddr = "127.0.0.1:1234"
 	r.Header.Set("Content-Type", "application/json")
 	r.AddCookie(&http.Cookie{Name: "XSRF-TOKEN", Value: s.generateToken("127.0.0.1", time.Now())})

@@ -21,7 +21,7 @@ import (
 	"periph.io/x/host/v3"
 )
 
-func main() {
+func run() error {
 	i2cID := flag.String("i2c", "", "I²C bus to use (default, uses the first I²C found)")
 	i2cAddr := flag.Uint("ia", 0x5A, "I²C bus address to use; either 0x5A (90, default) or 0x5B (91)")
 	status := flag.Bool("status", false, "command displays status register of sensor")
@@ -46,30 +46,34 @@ func main() {
 	if numberOfCommandFlags != 1 {
 		fmt.Println("Please use exactly one command.")
 		flag.PrintDefaults()
-		return
+		return nil
 	}
 
 	if flag.NArg() != 0 {
 		fmt.Println("Unexpected argument")
 		flag.PrintDefaults()
-		return
+		return nil
 	}
 
 	// Make sure periph is initialized.
 	if _, err := host.Init(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// Use i2creg I²C bus registry to find the first available I²C bus.
 	b, err := i2creg.Open(*i2cID)
 	if err != nil {
-		log.Fatalf("failed to open I²C: %v", err)
+		return fmt.Errorf("failed to open I²C: %w", err)
 	}
-	defer b.Close()
+	defer func() {
+		if closeErr := b.Close(); closeErr != nil {
+			log.Printf("Close b: %v", closeErr)
+		}
+	}()
 
 	d, err := ccs811.New(b, &ccs811.Opts{Addr: uint16(*i2cAddr), MeasurementMode: ccs811.MeasurementModeConstant1000})
 	if err != nil {
-		log.Fatalf("Device creation failed: %v", err)
+		return fmt.Errorf("device creation failed: %w", err)
 	}
 
 	if *status {
@@ -124,7 +128,7 @@ func main() {
 		values := &ccs811.SensorValues{}
 		if err := d.Sense(values); err != nil {
 			fmt.Println("Error getting data:", err)
-			return
+			return nil
 		}
 		fmt.Printf("Sensor values: \neCO2: %d\nVOC: %d\n", values.ECO2, values.VOC)
 		fmt.Print("Status: ")
@@ -168,15 +172,13 @@ func main() {
 		mode, err := d.GetMeasurementModeRegister()
 		if err != nil {
 			fmt.Println("Can't get measurement mode", err)
-			return
+			return nil
 		}
 		fmt.Println("Measurement mode:", mode.MeasurementMode)
 		fmt.Println("Generate interrupt:", mode.GenerateInterrupt)
 		fmt.Println("Use thresholds:", mode.UseThreshold)
-
 	}
 	if *setMeasureMode > 4 {
-
 		fmt.Println("Setting measurement mode to", *setMeasureMode)
 		i, err := strconv.Atoi(os.Args[2])
 		if err != nil {
@@ -188,11 +190,17 @@ func main() {
 			fmt.Println("Error configuring measurements:", err)
 		}
 	}
+	return nil
+}
 
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func printByteAsNibble(b byte) {
-	for c := 0; c < 8; c++ {
+	for c := range 8 {
 		fmt.Printf("%d", (b >> 0 & 1))
 		if c == 3 {
 			fmt.Print(" ")

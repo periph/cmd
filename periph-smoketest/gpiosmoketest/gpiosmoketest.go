@@ -227,7 +227,7 @@ func (s *SmokeTest) togglePin(p gpio.PinIO, levels ...gpio.Level) error {
 // The following events are tested for:
 // - Getting missing edges
 // - No accumulation of edges (only trigger once)
-// - No spurious edge
+// - No spurious edge.
 func (s *SmokeTest) testEdgesBoth(p1, p2 gpio.PinIO) error {
 	fmt.Printf("  Testing edges with %s\n", gpio.BothEdges)
 	if err := preparePins(p1, p2); err != nil {
@@ -340,7 +340,7 @@ func (s *SmokeTest) testWaitForEdge(p1, p2 gpio.PinIO) (err error) {
 	if d := time.Since(now); d < short {
 		return fmt.Errorf("wait returned too early after %s; < %s", d, short)
 	} else if d >= timeout {
-		//return fmt.Errorf("wait timed out after %s; >= %s", d, timeout)
+		// return fmt.Errorf("wait timed out after %s; >= %s", d, timeout)
 		fmt.Println("Known failure due to https://github.com/google/periph/issues/323")
 		return nil
 	}
@@ -393,7 +393,7 @@ func (s *SmokeTest) testWaitForEdge(p1, p2 gpio.PinIO) (err error) {
 // The following events are tested for:
 // - Getting missing edges
 // - No accumulation of edges (only trigger once)
-// - No spurious edge
+// - No spurious edge.
 func (s *SmokeTest) testEdgesSide(p1, p2 gpio.PinIO, e gpio.Edge) error {
 	set := gpio.High
 	idle := gpio.Low
@@ -588,15 +588,16 @@ func preparePins(p1, p2 gpio.PinIO) error {
 
 // since returns time in µs since the test start.
 func since(start time.Time) string {
-	µs := (time.Since(start) + time.Microsecond/2) / time.Microsecond
-	ms := µs / 1000
-	µs %= 1000
-	return fmt.Sprintf("%3d.%03dms", ms, µs)
+	us := (time.Since(start) + time.Microsecond/2) / time.Microsecond
+	ms := us / 1000
+	us %= 1000
+	return fmt.Sprintf("%3d.%03dms", ms, us)
 }
 
 // loggingPin logs when its state changes.
 type loggingPin struct {
 	gpio.PinIO
+
 	start time.Time
 }
 

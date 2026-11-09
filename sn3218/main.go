@@ -27,13 +27,21 @@ func mainImpl() error {
 	if err != nil {
 		return err
 	}
-	defer b.Close()
+	defer func() {
+		if closeErr := b.Close(); closeErr != nil {
+			log.Printf("Close b: %v", closeErr)
+		}
+	}()
 
 	d, err := sn3218.New(b)
 	if err != nil {
 		return err
 	}
-	defer d.Halt()
+	defer func() {
+		if closeErr := d.Halt(); closeErr != nil {
+			log.Printf("Halt d: %v", closeErr)
+		}
+	}()
 
 	if err = d.WakeUp(); err != nil {
 		return fmt.Errorf("error enabling device: %w", err)

@@ -46,7 +46,11 @@ func mainImpl() error {
 		return err
 	}
 	/* #nosec G307 */
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("Close f: %v", closeErr)
+		}
+	}()
 
 	img, err := png.Decode(f)
 	if err != nil {
@@ -102,8 +106,8 @@ func mainImpl() error {
 		return err
 	}
 
-	for x := 0; x < st7567.Width; x++ {
-		for y := 0; y < st7567.Height; y++ {
+	for x := range st7567.Width {
+		for y := range st7567.Height {
 			r, g, b, _ := img.At(x, y).RGBA()
 
 			if r == 0 && g == 0 && b == 0 {
